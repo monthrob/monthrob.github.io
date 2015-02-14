@@ -38,6 +38,17 @@
 					el.style.visibility = 'visible';
 					document.getElementById("googleInput").focus();
 				}
+				if (input == "72736869") {
+					//display the search bar
+					el = document.getElementById("searchbar");
+					el.style.display = 'none';
+					el.style.visibility = 'hidden';
+					gi = document.getElementById("googleInput");
+					if (gi.value != '') {
+						gi.value = '';
+					}
+					gi.blur();
+				}
 			}
 		</script>
 		<link rel="stylesheet" href="monthrob.css" />	
@@ -52,8 +63,8 @@
 			</div>
 			<div id="searchbar" style="display: none; visibility: hidden; text-align: center; vertical-align: middle;">
 				<form method="get" action="http://www.google.com/search">
-					<input id="googleInput" type="text" name="q" size="65" maxlength="255" value="" />
-					<input type="submit" value="Google Search" />
+					<input id="googleInput" type="text" name="q" size="65" maxlength="255" value=""/>
+					<input type="submit" value="Monthrob Search" />
 				</form>
 			</div>
 		</div>
