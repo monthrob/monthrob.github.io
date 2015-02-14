@@ -6,6 +6,9 @@
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
 		<script type="text/javascript" src="snow.js"></script>
 		<script type="text/javascript">
+			var input = "";
+			var timer;
+			var mode = false;
 			$(function() {
 				today = new Date();
 				var snowImage = "http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif";
@@ -17,6 +20,25 @@
 					Quantity: 10
 				});
 			});
+			$(document).keyup(function(e) {
+				//alert(e.which);
+				input += e.which;    
+				    
+				clearTimeout(timer);
+				timer = setTimeout(function() { input = ""; }, 200);
+				    
+				check_input();
+			});
+
+			function check_input() {
+				if(input == "71") {
+					//display the search bar
+					el = document.getElementById("searchbar");
+					el.style.display = 'block';
+					el.style.visibility = 'visible';
+					document.getElementById("googleInput").focus();
+				}
+			}
 		</script>
 		<link rel="stylesheet" href="monthrob.css" />	
 		<!-- End of Monflake -->
@@ -27,6 +49,12 @@
 				<div style="text-align: center; vertical-align: middle;">
 					<img src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
 				</div>
+			</div>
+			<div id="searchbar" style="display: none; visibility: hidden; text-align: center; vertical-align: middle;">
+				<form method="get" action="http://www.google.com/search">
+					<input id="googleInput" type="text" name="q" size="65" maxlength="255" value="" />
+					<input type="submit" value="Google Search" />
+				</form>
 			</div>
 		</div>
 		<div id="footer"> 
