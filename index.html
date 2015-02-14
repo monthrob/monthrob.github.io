@@ -1,10 +1,10 @@
 <DOCTYPE html>
 <html>
-    <head>
-    <title>Monthrob appreciation page</title>
+	<head>
+		<title>Monthrob appreciation page</title>
 		<!-- Monflake effect -->
-	    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
-        <script type="text/javascript" src="snow.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="snow.js"></script>
 		<script type="text/javascript">
 			$(function() {
 				$(document).snow({
@@ -13,27 +13,25 @@
 				});
 			});
 		</script>
-	<link rel="stylesheet" href="monthrob.css" />	
+		<link rel="stylesheet" href="monthrob.css" />	
 		<!-- End of Monflake -->
-    </head>
-    <body>
-	<table width=100% height=100%>
-            <tr style="height: 95%" >
-                <td style="text-align: center; vertical-align: middle;">
-			<img src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
-            	</td>
-            </tr>
-            <tr>
-                <td style="text-align: center; vertical-align: middle;">
-                    <span id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
-                </td>
-            </tr>
-        </table>
-        <script type="text/javascript">
-		# colors = ["LightGreen","DarkSalmon", "LightSkyBlue", "LightSalmon", "White", "LightGoldenRodYellow ", "#99FFFF", "#FF99AA"];
-		# var num_colors = colors.length;
-		# color_num = Math.floor(Math.random() * num_colors);
-		# document.body.style.backgroundColor = colors[color_num];
-        </script>
-    </body>
+	</head>
+	<body>
+		<div id="stage">
+			<div>
+				<div style="text-align: center; vertical-align: middle;">
+					<img src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
+				</div>
+			</div>
+		</div>
+		<div id="footer"> 
+			<div id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
+		</div>
+		<script type="text/javascript">
+			colors = ["LightGreen","DarkSalmon", "LightSkyBlue", "White", "LightGoldenRodYellow ", "#99FFFF", "#FF99AA"];
+			var num_colors = colors.length;
+			color_num = Math.floor(Math.random() * num_colors);
+			document.body.style.backgroundColor = colors[color_num];
+		</script>
+	</body>
 </html>

@@ -1,14 +1,15 @@
 	html {
 		overflow-y: hidden;
 		overflow-x: hidden;
+		height: 100%;
 	}
 	body {
-		-webkit-animation: colorChange 60s infinite linear;
+		height: 95%;
+		-webkit-animation: colorChange 30s infinite linear;
 
 	}
 	@-webkit-keyframes colorChange {
 		from {
-			background: lightgreen;
 		}
 		to {
 			background: lightsalmon;
@@ -22,6 +23,16 @@
 		font-weight: 100;
 		line-height: 1;
 		letter-spacing: -.05em;
+	}
+
+	#footer {
+		clear: both;
+		position: relative;
+		z-index: 1000;
+		height: 3em;
+		margin-top: -3em;
+		text-align: center;
+		vertical-align: middle;
 	}
 
 	.copyright {
@@ -80,5 +91,58 @@
 		100% {
 			-webkit-transform: scale3d(1, 1, 1);
 			transform: scale3d(1, 1, 1);
+		}
+	}
+ 	#stage {
+ 		position: relative;
+		 margin: 1em auto;
+		 width: 100%;
+		 height: 100%;
+	 }
+
+	#traveler {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+
+		-webkit-animation-name: travel;
+		-webkit-animation-timing-function: linear;
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-direction: alternate;
+		-webkit-animation-duration: 5.8s;
+		animation-name: travel;
+		animation-timing-function: linear;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+		animation-duration: 5.8s;
+	}
+
+	#bouncer {
+		position: absolute;
+		-webkit-animation-name: bounce;
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-duration: 5.2s;
+		animation-name: bounce;
+		animation-iteration-count: infinite;
+		animation-duration: 5.2s;
+	}
+	@-webkit-keyframes travel {
+		from {
+		}
+		to {
+			left: 100%;
+ 			margin-left: -50px;
+		}
+	}
+	@-webkit-keyframes bounce {
+		from, to  {
+			bottom: 10%;
+			margin-bottom: -50px;
+			-webkit-animation-timing-function: ease-out;
+		}
+		50% {
+			bottom: 100%;
+			margin-bottom: -50px;
+			-webkit-animation-timing-function: ease-in;
 		}
 	}
