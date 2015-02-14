@@ -22,6 +22,24 @@
 				-webkit-animation: colorChange 60s infinite linear;
 
 			}
+			@-webkit-keyframes colorChange {
+				from {
+					background: lightgreen;
+				}
+				to {
+					background: lightsalmon;
+				}
+			}
+
+			h2 {
+				margin-bottom: 1.5rem;
+	
+				font-size: 3rem;
+				font-weight: 100;
+				line-height: 1;
+				letter-spacing: -.05em;
+			}
+
 			.copyright {
 				font-family:sans-serif,verdana;
 				font-size:18pt;
@@ -30,14 +48,6 @@
 				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
 				-webkit-animation: hue 5s infinite linear;
-			}
-			@-webkit-keyframes colorChange {
-				from {
-					background: lightgreen;
-				}
-				to {
-					background: lightsalmon;
-				}
 			}
 			@-webkit-keyframes hue {
 				from {
@@ -48,6 +58,46 @@
 				}
 			}
 
+			.animated {
+				-webkit-animation: rubberBand 5s infinite linear;
+			}
+
+			@-webkit-keyframes rubberBand {
+				0% {
+					-webkit-transform: scale3d(1, 1, 1);
+					transform: scale3d(1, 1, 1);
+				}
+				
+				30% {
+					-webkit-transform: scale3d(1.25, 0.75, 1);
+					transform: scale3d(1.25, 0.75, 1);
+				}
+				
+				40% {
+					-webkit-transform: scale3d(0.75, 1.25, 1);
+					transform: scale3d(0.75, 1.25, 1);
+				}
+				
+				50% {
+					-webkit-transform: scale3d(1.15, 0.85, 1);
+					transform: scale3d(1.15, 0.85, 1);
+				}
+				
+				65% {
+					-webkit-transform: scale3d(.95, 1.05, 1);
+					transform: scale3d(.95, 1.05, 1);
+				}
+				
+				75% {
+					-webkit-transform: scale3d(1.05, .95, 1);
+					transform: scale3d(1.05, .95, 1);
+				}
+				
+				100% {
+					-webkit-transform: scale3d(1, 1, 1);
+					transform: scale3d(1, 1, 1);
+				}
+			}
 		</style>
 		<!-- End of Monflake -->
     </head>
@@ -60,7 +110,7 @@
             </tr>
             <tr>
                 <td style="text-align: center; vertical-align: middle;">
-                    <span class="copyright" behavior="alternate">&copy; 2015 The Monish</marquee>
+                    <span id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
                 </td>
             </tr>
         </table>
@@ -69,7 +119,6 @@
 		# var num_colors = colors.length;
 		# color_num = Math.floor(Math.random() * num_colors);
 		# document.body.style.backgroundColor = colors[color_num];
-	    
         </script>
     </body>
 </html>
