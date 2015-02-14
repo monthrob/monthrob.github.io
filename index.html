@@ -7,8 +7,13 @@
 		<script type="text/javascript" src="snow.js"></script>
 		<script type="text/javascript">
 			$(function() {
+				today = new Date();
+				var snowImage = "http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif";
+				if (today.getDate() == 14 && today.getMonth() == 1) {
+					snowImage = "http://www.i2symbol.com/images/symbols/love/white_heart_suit_u2661_icon_64x64.png";
+				}
 				$(document).snow({
-					SnowImage: "http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif",
+					SnowImage: snowImage,
 					Quantity: 10
 				});
 			});
