@@ -1,5 +1,6 @@
 
 //  Gravity module 
+// (c) Monish Biswas 2015
 //  
 //  Classes
 //
