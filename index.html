@@ -122,11 +122,11 @@ function setup () {
 	sim.addBody("minimon2",3,new Gravity.Vector(0,1),new Gravity.Vector(-0.25,0));
 	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.5,0));
 	sim.addBody("minimon4",5,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.25,0.25));
-	sim.addBody("minimon5",10,new Gravity.Vector(-1,1),new Gravity.Vector(0.1,0));
+	sim.addBody("minimon5",5,new Gravity.Vector(-1,1),new Gravity.Vector(0.2,0));
 	sim.paint();
 	
-	var frame_rate = 20
-	var speedup = 4
+	var frame_rate = 50
+	var speedup = 2
 	
 	var interval = 1/frame_rate;
 	setInterval(function (){iterate(interval*speedup)},interval*1000);
