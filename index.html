@@ -76,10 +76,14 @@ Simulation.prototype = {
 		//  Force relative to position from origin
 		for (var i in this.elements) {
 			var body = this.elements[i].body;
+			//  Gravitational pull
+			// Kind of m1*m1*G / r^2
 			var body_mass = body.mass
 			var factor = body_mass * this.sun_mass * this.G;
 			var r = body.position.modulus();
 			var force = body.position.scale(-1).direction().scale(factor/(r*r));
+			body.addForce(force);
+			//  Also add a elastic force to bring it back
 			body.addForce(force);
 			body.newFrame(time);
 		}
@@ -99,12 +103,13 @@ var sim;
 
 function setup () {
 	sim = new Simulation();
-	sim.addBody("minimon1",1,new Gravity.Vector(1,0),new Gravity.Vector(0.0,0.1));
-	sim.addBody("minimon2",2,new Gravity.Vector(0.5,0.5),new Gravity.Vector(-0.1,0.));
+	sim.addBody("minimon1",1,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.22));
+	sim.addBody("minimon2",2,new Gravity.Vector(0,1),new Gravity.Vector(-0.1,0));
 	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.1,0));
-	sim.addBody("minimon4",1,new Gravity.Vector(-0.5,0.5),new Gravity.Vector(0.0,0.1));
+	sim.addBody("minimon4",1,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.1,0.1));
+	sim.addBody("minimon5",100,new Gravity.Vector(-0.5,0.5),new Gravity.Vector(0.1,0));
 	sim.paint();
-	setInterval("iterate(0.1)",0.1);
+	setInterval("iterate(0.05)",0.5);
 }
 
 function iterate(time) {
@@ -129,6 +134,7 @@ function move (id, rows, cols) {
 			<img id="minimon2" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 			<img id="minimon3" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 			<img id="minimon4" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+			<img id="minimon5" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 			<div id="searchbar" style="display: none; visibility: hidden; text-align: center; vertical-align: middle;">
 				<form method="get" action="http://www.google.com/search">
 					<input id="googleInput" type="text" name="q" size="65" maxlength="255" value=""/>
