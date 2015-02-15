@@ -59,8 +59,13 @@ Simulation = function () {
 	this.elements =[];
 	this.bottom = new Gravity.Vector(-1,-1);
 	this.top    = new Gravity.Vector(1,1);
-	this.G = 0.0001;
-	this.sun_mass = 100;
+	this.G = 1e-5
+	this.sun_mass = 10000;
+	this.max_r = 2;
+	this.elastic_factor  = 1;
+	this.max_speed   = 0.1;
+	this.slowdown_factor = 1;
+	
 }
 
 
@@ -84,7 +89,17 @@ Simulation.prototype = {
 			var force = body.position.scale(-1).direction().scale(factor/(r*r));
 			body.addForce(force);
 			//  Also add a elastic force to bring it back
-			body.addForce(force);
+			if (r > this.max_r) {
+				var elastic_force = body.position.scale(-1).scale(this.elastic_factor);
+				body.addForce(elastic_force);
+				
+			}
+			// Also retadr it if is it too fast 
+			var speed = body.velocity.modulus()
+			if (speed > this.max) {
+				var slowdown_force = body.velocity.scale(-1).scale(this.slowdown_factor);
+				body.addForce(slowdown_force);
+			}
 			body.newFrame(time);
 		}
 	},
@@ -103,13 +118,18 @@ var sim;
 
 function setup () {
 	sim = new Simulation();
-	sim.addBody("minimon1",1,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.22));
-	sim.addBody("minimon2",2,new Gravity.Vector(0,1),new Gravity.Vector(-0.1,0));
-	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.1,0));
-	sim.addBody("minimon4",1,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.1,0.1));
-	sim.addBody("minimon5",100,new Gravity.Vector(-0.5,0.5),new Gravity.Vector(0.1,0));
+	sim.addBody("minimon1",2,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.5));
+	sim.addBody("minimon2",3,new Gravity.Vector(0,1),new Gravity.Vector(-0.25,0));
+	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.5,0));
+	sim.addBody("minimon4",5,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.25,0.25));
+	sim.addBody("minimon5",10,new Gravity.Vector(-1,1),new Gravity.Vector(0.1,0));
 	sim.paint();
-	setInterval("iterate(0.05)",0.5);
+	
+	var frame_rate = 20
+	var speedup = 4
+	
+	var interval = 1/frame_rate;
+	setInterval(function (){iterate(interval*speedup)},interval*1000);
 }
 
 function iterate(time) {
