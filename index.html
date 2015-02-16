@@ -57,57 +57,28 @@
 
 Simulation = function () { 
 	this.elements =[];
+	this.universe = new Gravity.Universe();
 	this.bottom = new Gravity.Vector(-1,-1);
 	this.top    = new Gravity.Vector(1,1);
-	this.G = 1e-5
-	this.sun_mass = 10000;
-	this.max_r = 2;
-	this.elastic_factor  = 1;
-	this.max_speed   = 0.1;
-	this.slowdown_factor = 1;
-	
+
 }
 
 
 
 Simulation.prototype = {
 	addBody: function (id,  mass, pos, vel) {
-		this.elements.push ({
-			id: id, 
-			body: new Gravity.Body(mass, pos, vel)
-		})
+		this.elements.push(id);
+		this.universe.addBody(id,mass,pos,vel);
 	},
 	iterate: function(time) {
 		//  Force relative to position from origin
-		for (var i in this.elements) {
-			var body = this.elements[i].body;
-			//  Gravitational pull
-			// Kind of m1*m1*G / r^2
-			var body_mass = body.mass
-			var factor = body_mass * this.sun_mass * this.G;
-			var r = body.position.modulus();
-			var force = body.position.scale(-1).direction().scale(factor/(r*r));
-			body.addForce(force);
-			//  Also add a elastic force to bring it back
-			if (r > this.max_r) {
-				var elastic_force = body.position.scale(-1).scale(this.elastic_factor);
-				body.addForce(elastic_force);
-				
-			}
-			// Also retadr it if is it too fast 
-			var speed = body.velocity.modulus()
-			if (speed > this.max) {
-				var slowdown_force = body.velocity.scale(-1).scale(this.slowdown_factor);
-				body.addForce(slowdown_force);
-			}
-			body.newFrame(time);
-		}
+		this.universe.iterate(time);
 	},
 	paint: function () {
 		move("mainmon",500-320/2,500-323/2);
 		for (i in this.elements) {
-			var id = this.elements[i].id;
-			var body = this.elements[i].body;
+			var id    = this.elements[i];
+			var body  = this.universe.bodies[id];
 			var coors = body.viewportCoord(0,0,1000,1000,this.bottom,this.top); 
 			move(id,coors.rows, coors.cols);
 		}
@@ -119,14 +90,14 @@ var sim;
 function setup () {
 	sim = new Simulation();
 	sim.addBody("minimon1",2,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.5));
-	sim.addBody("minimon2",3,new Gravity.Vector(0,1),new Gravity.Vector(-0.25,0));
+	sim.addBody("minimon2",3,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.25,0));
 	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.5,0));
-	sim.addBody("minimon4",5,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.25,0.25));
+	sim.addBody("minimon4",5,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.25,0.23));
 	sim.addBody("minimon5",5,new Gravity.Vector(-1,1),new Gravity.Vector(0.2,0));
 	sim.paint();
 	
-	var frame_rate = 50
-	var speedup = 2
+	var frame_rate = 25
+	var speedup = 2;
 	
 	var interval = 1/frame_rate;
 	setInterval(function (){iterate(interval*speedup)},interval*1000);
