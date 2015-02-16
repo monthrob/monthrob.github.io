@@ -55,12 +55,13 @@
 			}
 			
 
-Simulation = function () { 
+Simulation = function (universe_el) {
+	//  Holds the canves for the universe
+	this.universe_el = universe_el;
 	this.elements =[];
 	this.universe = new Gravity.Universe();
 	this.bottom = new Gravity.Vector(-1,-1);
 	this.top    = new Gravity.Vector(1,1);
-
 }
 
 
@@ -75,11 +76,13 @@ Simulation.prototype = {
 		this.universe.iterate(time);
 	},
 	paint: function () {
-		move("mainmon",500-320/2,500-323/2);
+		var height = this.universe_el.clientHeight;
+		var width  = this.universe_el.clientWidth;
+		move("mainmon",height/2,width /2);
 		for (i in this.elements) {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
-			var coors = body.viewportCoord(0,0,1000,1000,this.bottom,this.top); 
+			var coors = body.viewportCoord(0,0,height,width,this.bottom,this.top); 
 			move(id,coors.rows, coors.cols);
 		}
 	}
@@ -88,7 +91,7 @@ Simulation.prototype = {
 var sim;
 
 function setup () {
-	sim = new Simulation();
+	sim = new Simulation(document.getElementById("monverse"));
 	sim.addBody("minimon1",2,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.5));
 	sim.addBody("minimon2",3,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.25,0));
 	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.5,0));
@@ -110,22 +113,27 @@ function iterate(time) {
 
 function move (id, rows, cols) {
 		var el = document.getElementById(id);
-		el.style.top = rows + "px";
-		el.style.left  = cols + "px";
+		var height = el.clientHeight;
+		var width  = el.clientWidth;
+		
+		el.style.top =  (rows - height/2) + "px";
+		el.style.left  = (cols - width/2 ) + "px";
 }
 			
 		</script>
 		<link rel="stylesheet" href="monthrob.css" />	
 		<!-- End of Monflake -->
 	</head>
-	<body >
+	<body>
 		<div id="stage">
-			<img id="mainmon" class="mainmon" src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
-			<img id="minimon1" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-			<img id="minimon2" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-			<img id="minimon3" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-			<img id="minimon4" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-			<img id="minimon5" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+			<div id="monverse" class="monverse">
+				<img id="mainmon" class="mainmon" src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
+				<img id="minimon1" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+				<img id="minimon2" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+				<img id="minimon3" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+				<img id="minimon4" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+				<img id="minimon5" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+			</div>
 			<div id="searchbar" style="display: none; visibility: hidden; text-align: center; vertical-align: middle;">
 				<form method="get" action="http://www.google.com/search">
 					<input id="googleInput" type="text" name="q" size="65" maxlength="255" value=""/>

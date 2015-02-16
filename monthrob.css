@@ -111,6 +111,12 @@
 		 height: 100%;
 	 }
 
+  	div#monverse {
+ 		position: relative;
+		width: 100%;
+		height: 100%;
+	 }
+ 
 	#traveler {
 		position: absolute;
 
