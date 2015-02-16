@@ -139,10 +139,6 @@ Gravity.Vector.prototype = {
 	"scale": function (a) {
 		return new Gravity.Vector (this.x*a, this.y*a);
 	},
-	"scalev": function (v) {
-		return new Gravity.Vector (this.x*v.x, this.y*v.y);
-	},
-
 	//  Returns modulus of vector
 	modulus: function () {
 		return Math.sqrt(this.x*this.x + this.y*this.y); 
