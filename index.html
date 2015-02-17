@@ -79,6 +79,9 @@ Simulation.prototype = {
 		var height = this.universe_el.clientHeight;
 		var width  = this.universe_el.clientWidth;
 		move("mainmon",height/2,width /2);
+		
+		move_sun();
+
 		for (i in this.elements) {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
@@ -145,8 +148,8 @@ function move (id, rows, cols) {
 	<body>
 		<div id="stage">
 			<div id="sunshine_container" class="shine_base shine_container">
-				<div class="shine_base shine_mask_2">
-					<div class="shine_base shine_mask_1">
+				<div class="shine_base">
+					<div class="shine_base">
 						<div class="shine_base shine_gradient"></div>
 					</div>
 				</div>
@@ -174,7 +177,7 @@ function move (id, rows, cols) {
 			
 			// This positions sunshine divs right behind 'mainmon'
 			// Have to use a timeout because Chrome initially reports wrong position
-			setTimeout(function () {
+			function move_sun() {
 				var main_position   = $('#mainmon').position();
 				main_position.top  -= $('#sunshine_container').height()  / 4.0;
 				main_position.left -= $('#sunshine_container').width()   / 4.0;
@@ -182,8 +185,9 @@ function move (id, rows, cols) {
 				main_position.top  -= 10
 				main_position.left -= 20;
 				$('#sunshine_container').css(main_position);	
-				$('#sunshine_container').fadeIn(1500);
-			}, 1000);
+				
+			}
+			$('#sunshine_container').fadeIn(1500);
 		</script>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
