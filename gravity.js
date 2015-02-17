@@ -29,6 +29,7 @@ Gravity.Universe = function () {
 	this.do_retard = false;
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
+	this.do_all_gravity  = false;
 }
 
 Gravity.Universe.prototype = {
@@ -46,6 +47,27 @@ Gravity.Universe.prototype = {
 			var r = body.position.modulus();
 			var force = body.position.scale(-1).direction().scale(factor/(r*r));
 			body.addForce(force);
+			// Also consider the interactions with all the other bodies
+			if (this.do_all_gravity) {
+				for (j in this.bodies) {
+					if (i == j) {
+						continue;
+					}
+					var other = this.bodies[j];
+					var relative_pos = other.position.minus(body.position);
+					var r = relative_pos.modulus();
+					var other_mass  = other.mass;
+					
+					var factor = body_mass * other_mass * this.gravity_constant
+					var force = relative_pos.direction().scale(factor/(r*r));
+					
+					body.addForce(force);
+					
+					
+				}
+			}
+			
+			
 			//  Also add a elastic force to bring it back
 			if (this.do_elastic && r > this.max_r) {
 				var elastic_force = body.position.scale(-1).scale(this.elastic_factor);
@@ -147,6 +169,9 @@ Gravity.Vector = function(the_x,the_y) {
 Gravity.Vector.prototype = {
 	"add": function (a) {
 		return new Gravity.Vector(this.x + a.x,this.y + a.y);
+	},
+	"minus": function (a) {
+		return new Gravity.Vector(this.x - a.x,this.y - a.y);
 	},
 	"scale": function (a) {
 		return new Gravity.Vector (this.x*a, this.y*a);
