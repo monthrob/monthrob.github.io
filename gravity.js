@@ -23,8 +23,10 @@ Gravity.Universe = function () {
 	this.gravity_constant = 1e-5;
 	//  This is in mass units, earth mass's
 	this.centre_mass = 10000
+	this.do_elastic = false;
 	this.max_r = 2;
 	this.elastic_factor  = 1;
+	this.do_retard = false;
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
 }
@@ -45,13 +47,13 @@ Gravity.Universe.prototype = {
 			var force = body.position.scale(-1).direction().scale(factor/(r*r));
 			body.addForce(force);
 			//  Also add a elastic force to bring it back
-			if (r > this.max_r) {
+			if (this.do_elastic && r > this.max_r) {
 				var elastic_force = body.position.scale(-1).scale(this.elastic_factor);
 				body.addForce(elastic_force);
 			}
-			// Also retadr it if is it too fast 
+			// Also retard it if is it too fast 
 			var speed = body.velocity.modulus()
-			if (speed > this.max) {
+			if (this.do_retard && speed > this.max) {
 				var slowdown_force = body.velocity.scale(-1).scale(this.slowdown_factor);
 				body.addForce(slowdown_force);
 			}
@@ -112,10 +114,7 @@ Gravity.Body.prototype = {
 		// New Position - from Velocity 
 		this.position = this.position.add(this.velocity.scale(time));
 		// Now consider acceleration 0.5 * a * t^2
-//		this.position = this.position.add(accel.scale(0.5).scale(time*time))
-		// Note the correct equation has a 0.5 in there, but a better animation 
-		// is produced with an incorrect equation.
-		this.position = this.position.add(accel.scale(1).scale(time*time))
+		this.position = this.position.add(accel.scale(0.5).scale(time*time))
 		//  New Velocity
 		this.velocity = this.velocity.add(accel.scale(time));
 	}
