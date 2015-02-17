@@ -91,12 +91,33 @@ Simulation.prototype = {
 var sim;
 
 function setup () {
-	sim = new Simulation(document.getElementById("monverse"));
+	var monverse_el = document.getElementById("monverse");
+	sim = new Simulation(monverse_el);
+	var n_planets = 5
+	var max_x = 1.5;
+	var max_y = 1.5;
+	var min_mass = 0.5;
+	var max_mass = 10;
+	
+	var pos = new Gravity.Vector(1,0)
 	sim.addBody("minimon1",2,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.5));
 	sim.addBody("minimon2",3,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.25,0));
 	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.5,0));
 	sim.addBody("minimon4",5,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.25,0.23));
 	sim.addBody("minimon5",5,new Gravity.Vector(-1,1),new Gravity.Vector(0.2,0));
+
+	// Random orbiting planets
+	for (var i =0; i < n_planets; i++) {
+		var mass = min_mass + (Math.random() * (max_mass - min_mass) );
+		var pos = new Gravity.Vector((Math.random()*2-1)*max_x,(Math.random()*2-1)*max_y)
+		var newNode = document.getElementById("minimon").cloneNode();
+		monverse_el.appendChild(newNode);
+		var name =  "minimon1"+i
+		newNode.id = name
+		newNode.style.display="";
+		sim.addBody(name,mass,pos,sim.universe.getOrbitalVelocity(pos,mass,1));
+	}
+
 	sim.paint();
 	
 	var frame_rate = 25
@@ -131,6 +152,7 @@ function move (id, rows, cols) {
 		<div id="stage">
 			<div id="monverse" class="monverse">
 				<img id="mainmon" class="mainmon" src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
+				<img id="minimon"  class="minimon" style="display:none" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 				<img id="minimon1" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 				<img id="minimon2" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 				<img id="minimon3" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>

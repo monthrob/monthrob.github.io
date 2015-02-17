@@ -59,7 +59,20 @@ Gravity.Universe.prototype = {
 			}
 			body.newFrame(time);
 		}
+	},
+	getOrbitalVelocity: function (pos,m,up) {
+		var r = pos.modulus();
+		var angle = Math.PI/2;
+
+		if (!up) {
+			angle=-angle;
+		}
+		
+		var speed = Math.sqrt(this.gravity_constant * (this.centre_mass + m)/r);
+		return pos.rotate(angle).direction().scale(speed);
 	}
+
+	
 	
 	
 }
@@ -114,7 +127,7 @@ Gravity.Body.prototype = {
 		// New Position - from Velocity 
 		this.position = this.position.add(this.velocity.scale(time));
 		// Now consider acceleration 0.5 * a * t^2
-		this.position = this.position.add(accel.scale(0.5).scale(time*time))
+		this.position = this.position.add(accel.scale(0.5).scale(time*time));
 		//  New Velocity
 		this.velocity = this.velocity.add(accel.scale(time));
 	}
@@ -150,7 +163,17 @@ Gravity.Vector.prototype = {
 	direction: function () {
 		return this.scale(1/this.modulus());
 	},
-	
+	rotate: function (angle) {
+		var sin = Math.sin(angle);
+		var cos = Math.cos(angle);
+		var x=this.x;
+		var y=this.y;
+
+		return new Gravity.Vector(
+			x*cos - y*sin,
+			x*sin + y*cos
+		);
+	},	
 	toString: function() {
 		return '(' + this.x + ',' + this.y + ')';
 	}
