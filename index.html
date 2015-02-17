@@ -78,11 +78,23 @@ Simulation.prototype = {
 	paint: function () {
 		var height = this.universe_el.clientHeight;
 		var width  = this.universe_el.clientWidth;
+
+		// Try and maintain aspect ratio
+		// By expanding view port
+		var x_scale=1;
+		var y_scale=1;
+		if (height > width) {
+			y_scale = height / width;
+		} else if (width > height) {
+			x_scale = width / height;
+		}
+		var scale_vec = new Gravity.Vector(x_scale,y_scale);
+		
 		move("mainmon",height/2,width /2);
 		for (i in this.elements) {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
-			var coors = body.viewportCoord(0,0,height,width,this.bottom,this.top); 
+			var coors = body.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec)); 
 			move(id,coors.rows, coors.cols);
 		}
 	}
@@ -99,7 +111,7 @@ function setup () {
 	sim.addBody("minimon5",5,new Gravity.Vector(-1,1),new Gravity.Vector(0.2,0));
 	sim.paint();
 	
-	var frame_rate = 25
+	var frame_rate = 25;
 	var speedup = 2;
 	
 	var interval = 1/frame_rate;
