@@ -60,8 +60,8 @@ Simulation = function (universe_el) {
 	this.universe_el = universe_el;
 	this.elements =[];
 	this.universe = new Gravity.Universe();
-	this.bottom = new Gravity.Vector(-1,-1);
-	this.top    = new Gravity.Vector(1,1);
+	this.bottom = new Gravity.Vector(-2,-2);
+	this.top    = new Gravity.Vector(2,2);
 }
 
 
@@ -91,6 +91,9 @@ Simulation.prototype = {
 		var scale_vec = new Gravity.Vector(x_scale,y_scale);
 		
 		move("mainmon",height/2,width /2);
+		
+		move_sun();
+
 		for (i in this.elements) {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
@@ -103,23 +106,40 @@ Simulation.prototype = {
 var sim;
 
 function setup () {
-	sim = new Simulation(document.getElementById("monverse"));
-	sim.addBody("minimon1",2,new Gravity.Vector(0.5,0),new Gravity.Vector(0.0,0.5));
-	sim.addBody("minimon2",3,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.25,0));
-	sim.addBody("minimon3",1,new Gravity.Vector(0,0.5),new Gravity.Vector(-0.5,0));
-	sim.addBody("minimon4",5,new Gravity.Vector(-0.5,-0.5),new Gravity.Vector(-0.25,0.23));
-	sim.addBody("minimon5",5,new Gravity.Vector(-1,1),new Gravity.Vector(0.2,0));
+	var monverse_el = document.getElementById("monverse");
+	sim = new Simulation(monverse_el);
+	var n_planets = 5
+	var max_x = 1.5;
+	var max_y = 1.5;
+	var min_mass = 0.5;
+	var max_mass = 10;
+	
+	// Random orbiting planets
+	for (var i =0; i < n_planets; i++) {
+		var mass = min_mass + (Math.random() * (max_mass - min_mass) );
+		var pos = new Gravity.Vector((Math.random()*2-1)*max_x,(Math.random()*2-1)*max_y)
+		var newNode = document.getElementById("minimon").cloneNode();
+		monverse_el.appendChild(newNode);
+		var name =  "minimon1"+i
+		newNode.id = name
+		newNode.style.display="";
+		sim.addBody(name,mass,pos,sim.universe.getOrbitalVelocity(pos,mass,1));
+	}
+
 	sim.paint();
 	
 	var frame_rate = 25;
+	var subdivisions = 250
 	var speedup = 2;
 	
 	var interval = 1/frame_rate;
-	setInterval(function (){iterate(interval*speedup)},interval*1000);
+	setInterval(function (){iterate(interval*speedup,subdivisions)},interval*1000);
 }
 
-function iterate(time) {
-	sim.iterate(time);
+function iterate(time,subdivisions) {
+	for (var i = 0; i < subdivisions; i++) {
+		sim.iterate(time/subdivisions);
+	}
 	sim.paint();
 }
 
@@ -133,18 +153,22 @@ function move (id, rows, cols) {
 }
 			
 		</script>
-		<link rel="stylesheet" href="monthrob.css" />	
+		<link rel="stylesheet" href="monthrob.css" />
+		<link rel="stylesheet" href="sunshine.css" />
 		<!-- End of Monflake -->
 	</head>
 	<body>
 		<div id="stage">
+			<div id="sunshine_container" class="shine_base shine_container">
+				<div class="shine_base">
+					<div class="shine_base">
+						<div class="shine_base shine_gradient"></div>
+					</div>
+				</div>
+			</div>
 			<div id="monverse" class="monverse">
 				<img id="mainmon" class="mainmon" src="https://dl.dropboxusercontent.com/u/15086336/CDN/throb.gif" alt="monthrob"></img>
-				<img id="minimon1" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-				<img id="minimon2" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-				<img id="minimon3" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-				<img id="minimon4" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
-				<img id="minimon5" class="minimon" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
+				<img id="minimon"  class="minimon" style="display:none" src="http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif" alt="minithrob"></img>
 			</div>
 			<div id="searchbar" style="display: none; visibility: hidden; text-align: center; vertical-align: middle;">
 				<form method="get" action="http://www.google.com/search">
@@ -162,7 +186,21 @@ function move (id, rows, cols) {
 			color_num = Math.floor(Math.random() * num_colors);
 			document.body.style.backgroundColor = colors[color_num];
 			setup();
-			</script>
+			
+			// This positions sunshine divs right behind 'mainmon'
+			// Have to use a timeout because Chrome initially reports wrong position
+			function move_sun() {
+				var main_position   = $('#mainmon').position();
+				main_position.top  -= $('#sunshine_container').height()  / 4.0;
+				main_position.left -= $('#sunshine_container').width()   / 4.0;
+				// Adjustment for monthrob not centred
+				main_position.top  -= 10
+				main_position.left -= 20;
+				$('#sunshine_container').css(main_position);	
+				
+			}
+			$('#sunshine_container').fadeIn(1500);
+		</script>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
