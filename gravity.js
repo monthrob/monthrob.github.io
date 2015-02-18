@@ -60,10 +60,8 @@ Gravity.Universe.prototype = {
 					
 					var factor = body_mass * other_mass * this.gravity_constant
 					var force = relative_pos.direction().scale(factor/(r*r));
-					
+		
 					body.addForce(force);
-					
-					
 				}
 			}
 			
