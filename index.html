@@ -111,9 +111,9 @@ function setup () {
 	var n_planets = 5
 	var max_x = 1.5;
 	var max_y = 1.5;
-	var min_mass = 0.5;
+	var min_mass = 1;
 	var max_mass = 10;
-	
+	var unit_size = 10;
 	// Random orbiting planets
 	for (var i =0; i < n_planets; i++) {
 		var mass = min_mass + (Math.random() * (max_mass - min_mass) );
@@ -123,6 +123,9 @@ function setup () {
 		var name =  "minimon1"+i
 		newNode.id = name
 		newNode.style.display="";
+		newNode.style.width=mass*unit_size;
+		newNode.style.height=mass*unit_size;
+		
 		sim.addBody(name,mass,pos,sim.universe.getOrbitalVelocity(pos,mass,1));
 	}
 
@@ -190,13 +193,12 @@ function move (id, rows, cols) {
 			// This positions sunshine divs right behind 'mainmon'
 			// Have to use a timeout because Chrome initially reports wrong position
 			function move_sun() {
-				var main_position   = $('#mainmon').position();
-				main_position.top  -= $('#sunshine_container').height()  / 4.0;
-				main_position.left -= $('#sunshine_container').width()   / 4.0;
-				// Adjustment for monthrob not centred
-				main_position.top  -= 10
-				main_position.left -= 20;
-				$('#sunshine_container').css(main_position);	
+				var mainmon  = $('#mainmon');
+				var sunshine = $('#sunshine_container');
+				var main_position   = mainmon.position();
+				main_position.top  -= (sunshine.height() - mainmon.height())  / 2.0;
+				main_position.left -= (sunshine.width()  - mainmon.width())   / 2.0;
+				sunshine.css(main_position);	
 				
 			}
 			$('#sunshine_container').fadeIn(1500);
