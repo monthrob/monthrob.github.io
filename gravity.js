@@ -24,12 +24,12 @@ Gravity.Universe = function () {
 	//  This is in mass units, earth mass's
 	this.centre_mass = 10000
 	this.do_elastic = false;
-	this.max_r = 2;
+	this.max_r = 5;
 	this.elastic_factor  = 1;
-	this.do_retard = false;
+	this.do_retard = true;
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
-	this.do_all_gravity  = false;
+	this.do_all_gravity  = true;
 }
 
 Gravity.Universe.prototype = {
@@ -75,8 +75,11 @@ Gravity.Universe.prototype = {
 			}
 			// Also retard it if is it too fast 
 			var speed = body.velocity.modulus()
-			if (this.do_retard && speed > this.max) {
-				var slowdown_force = body.velocity.scale(-1).scale(this.slowdown_factor);
+			if (this.do_retard &&  r > this.max_r) {
+					//  Work out the component in the direction from the origin
+					//  and pull in that direction 
+				var outward_vel = body.velocity.dot(body.position)
+				var slowdown_force = body.position.direction().scale(-this.slowdown_factor);
 				body.addForce(slowdown_force);
 			}
 			body.newFrame(time);
@@ -172,6 +175,9 @@ Gravity.Vector.prototype = {
 	},
 	"minus": function (a) {
 		return new Gravity.Vector(this.x - a.x,this.y - a.y);
+	},
+	"dot": function (v) {
+		return this.x*v.x + this.y*v.y;
 	},
 	"scale": function (a) {
 		return new Gravity.Vector (this.x*a, this.y*a);
