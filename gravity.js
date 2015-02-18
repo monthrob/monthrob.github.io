@@ -29,7 +29,7 @@ Gravity.Universe = function () {
 	this.do_retard = true;
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
-	this.do_all_gravity  = true;
+	this.do_all_gravity  = false;
 }
 
 Gravity.Universe.prototype = {
