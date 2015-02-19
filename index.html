@@ -108,16 +108,21 @@ var sim;
 function setup () {
 	var monverse_el = document.getElementById("monverse");
 	sim = new Simulation(monverse_el);
-	var n_planets = 5
-	var max_x = 1.5;
-	var max_y = 1.5;
+	var n_planets = 5;
+	var min_r = 0.5;
+	var max_r = 2;
+
 	var min_mass = 1;
 	var max_mass = 10;
 	var unit_size = 10;
 	// Random orbiting planets
 	for (var i =0; i < n_planets; i++) {
 		var mass = min_mass + (Math.random() * (max_mass - min_mass) );
-		var pos = new Gravity.Vector((Math.random()*2-1)*max_x,(Math.random()*2-1)*max_y)
+		// Use polar coordinates 
+		// 1. Choose a random radius 
+		// 2. Chose  a random ange from 0 360 = 2*pi in radians 
+		var pos = new Gravity.Vector(min_r + Math.random()*(max_r - min_r),0)
+						.rotate(Math.random()*2*Math.PI);
 		var newNode = document.getElementById("minimon").cloneNode();
 		monverse_el.appendChild(newNode);
 		var name =  "minimon1"+i
