@@ -62,14 +62,19 @@ Simulation = function (universe_el) {
 	this.universe = new Gravity.Universe();
 	this.bottom = new Gravity.Vector(-2,-2);
 	this.top    = new Gravity.Vector(2,2);
+	this.sun = new Gravity.Body (
+			10000,
+			0.5 ,
+			new Gravity.Vector (0,0),
+			new Gravity.Vector (0,0));
+
 }
 
 
-
 Simulation.prototype = {
-	addBody: function (id,  mass, pos, vel) {
+	addBody: function (id,  mass, radius, pos, vel) {
 		this.elements.push(id);
-		this.universe.addBody(id,mass,pos,vel);
+		this.universe.addBody(id,mass, radius, pos,vel);
 	},
 	iterate: function(time) {
 		//  Force relative to position from origin
@@ -89,16 +94,17 @@ Simulation.prototype = {
 			x_scale = width / height;
 		}
 		var scale_vec = new Gravity.Vector(x_scale,y_scale);
-		
-		move("mainmon",height/2,width /2);
+		coors  = this.sun.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
+//		move("mainmon",height/2,width /2,100,100);
+		move("mainmon",coors.rows, coors.cols,coors.width, coors.height);
 		
 		move_sun();
 
 		for (i in this.elements) {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
-			var coors = body.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec)); 
-			move(id,coors.rows, coors.cols);
+			var coors = body.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
+			move(id,coors.rows, coors.cols,coors.width, coors.height);
 		}
 	}
 }
@@ -109,12 +115,12 @@ function setup () {
 	var monverse_el = document.getElementById("monverse");
 	sim = new Simulation(monverse_el);
 	var n_planets = 5;
-	var min_r = 0.5;
+	var min_r = 0.51;
 	var max_r = 2;
 
 	var min_mass = 1;
 	var max_mass = 10;
-	var unit_size = 10;
+	var unit_size = 0.01;
 	// Random orbiting planets
 	for (var i =0; i < n_planets; i++) {
 		var mass = min_mass + (Math.random() * (max_mass - min_mass) );
@@ -128,10 +134,10 @@ function setup () {
 		var name =  "minimon1"+i
 		newNode.id = name
 		newNode.style.display="";
-		newNode.style.width=mass*unit_size;
-		newNode.style.height=mass*unit_size;
+//		newNode.style.width=mass*unit_size;
+//		newNode.style.height=mass*unit_size;
 		
-		sim.addBody(name,mass,pos,sim.universe.getOrbitalVelocity(pos,mass,1));
+		sim.addBody(name,mass,mass*unit_size,pos,sim.universe.getOrbitalVelocity(pos,mass,1));
 	}
 
 	sim.paint();
@@ -151,11 +157,18 @@ function iterate(time,subdivisions) {
 	sim.paint();
 }
 
-function move (id, rows, cols) {
+function move (id, rows, cols, width,height) {
 		var el = document.getElementById(id);
-		var height = el.clientHeight;
-		var width  = el.clientWidth;
-		
+		if (typeof width === "undefined") {
+			width  = el.clientWidth;
+		} else {
+			el.style.width = width + "px";
+		}
+		if (typeof height === "undefined") {
+			var height = el.clientHeight;
+		} else {
+			el.style.height = height + "px";
+		}
 		el.style.top =  (rows - height/2) + "px";
 		el.style.left  = (cols - width/2 ) + "px";
 }

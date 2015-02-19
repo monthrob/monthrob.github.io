@@ -33,8 +33,8 @@ Gravity.Universe = function () {
 }
 
 Gravity.Universe.prototype = {
-	addBody: function (id,  mass, pos, vel) {
-		this.bodies[id] = new Gravity.Body(mass, pos, vel,this);
+	addBody: function (id,  mass, radius, pos, vel) {
+		this.bodies[id] = new Gravity.Body(mass, radius, pos, vel,this);
 	},
 	iterate: function (time) {
 		//  Force relative to position from origin
@@ -105,8 +105,9 @@ Gravity.Universe.prototype = {
 
 //  Body class 
 
-Gravity.Body = function(mass,position,velocity,universe) {
+Gravity.Body = function(mass,radius,position,velocity,universe) {
 	this.mass     = mass;
+	this.radius   = radius;
 	this.position = position;
 	this.velocity = velocity;
 	this.universe = universe;
@@ -128,10 +129,15 @@ Gravity.Body.prototype = {
 	// Positions of top left, bottom right in universe
 	// Converts up--down direction
 	viewportCoord: function (top,left, height, width, bottom_vector, top_vector) {
+		var factor_x = width  / (top_vector.x - bottom_vector.x); 
+		var factor_y = height / (top_vector.y - bottom_vector.y);
 		var cols = left + ((this.position.x - bottom_vector.x) / (top_vector.x - bottom_vector.x) * width);
 		// rows are the other way round
 		var rows    = top + ((top_vector.y - this.position.y ) / (top_vector.y - bottom_vector.y) * height);
-		return {rows: rows,cols:cols}
+		var el_height = this.radius * factor_y*2;
+		var el_width  = this.radius * factor_x*2;
+		
+		return {rows: rows,cols:cols, height: el_height , width: el_width}
 	
 	},
 	// Moves the body on per frame
