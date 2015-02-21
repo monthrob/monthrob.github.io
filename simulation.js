@@ -82,9 +82,7 @@ Simulation.prototype = {
 		}
 		var scale_vec = new Gravity.Vector(x_scale,y_scale);
 		coors  = this.sun.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
-//		move("mainmon",height/2,width /2,100,100);
 		this.move("mainmon",coors.rows, coors.cols,coors.width, coors.height);
-//		this.move("mainmon",height/2,width /2);
 		
 		move_sun();
 
