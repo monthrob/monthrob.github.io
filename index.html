@@ -5,6 +5,7 @@
 		<!-- Monflake effect -->
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
 		<script type="text/javascript" src="gravity.js"></script>
+		<script type="text/javascript" src="simulation.js"></script>
 		<script type="text/javascript" src="snow.js"></script>
 		<script type="text/javascript">
 			var input = "";
@@ -53,126 +54,7 @@
 					gi.blur();
 				}
 			}
-			
 
-Simulation = function (universe_el) {
-	//  Holds the canves for the universe
-	this.universe_el = universe_el;
-	this.elements =[];
-	this.universe = new Gravity.Universe();
-	this.bottom = new Gravity.Vector(-2,-2);
-	this.top    = new Gravity.Vector(2,2);
-	this.sun = new Gravity.Body (
-			10000,
-			0.5 ,
-			new Gravity.Vector (0,0),
-			new Gravity.Vector (0,0));
-
-}
-
-
-Simulation.prototype = {
-	addBody: function (id,  mass, radius, pos, vel) {
-		this.elements.push(id);
-		this.universe.addBody(id,mass, radius, pos,vel);
-	},
-	iterate: function(time) {
-		//  Force relative to position from origin
-		this.universe.iterate(time);
-	},
-	paint: function () {
-		var height = this.universe_el.clientHeight;
-		var width  = this.universe_el.clientWidth;
-
-		// Try and maintain aspect ratio
-		// By expanding view port
-		var x_scale=1;
-		var y_scale=1;
-		if (height > width) {
-			y_scale = height / width;
-		} else if (width > height) {
-			x_scale = width / height;
-		}
-		var scale_vec = new Gravity.Vector(x_scale,y_scale);
-		coors  = this.sun.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
-//		move("mainmon",height/2,width /2,100,100);
-		move("mainmon",coors.rows, coors.cols,coors.width, coors.height);
-		
-		move_sun();
-
-		for (i in this.elements) {
-			var id    = this.elements[i];
-			var body  = this.universe.bodies[id];
-			var coors = body.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
-			move(id,coors.rows, coors.cols,coors.width, coors.height);
-		}
-	}
-}
-
-var sim;
-
-function setup () {
-	var monverse_el = document.getElementById("monverse");
-	sim = new Simulation(monverse_el);
-	var n_planets = 5;
-	var min_r = 0.51;
-	var max_r = 2;
-
-	var min_mass = 1;
-	var max_mass = 10;
-	var unit_size = 0.01;
-	// Random orbiting planets
-	for (var i =0; i < n_planets; i++) {
-		var mass = min_mass + (Math.random() * (max_mass - min_mass) );
-		// Use polar coordinates 
-		// 1. Choose a random radius 
-		// 2. Chose  a random ange from 0 360 = 2*pi in radians 
-		var pos = new Gravity.Vector(min_r + Math.random()*(max_r - min_r),0)
-						.rotate(Math.random()*2*Math.PI);
-		var newNode = document.getElementById("minimon").cloneNode();
-		monverse_el.appendChild(newNode);
-		var name =  "minimon1"+i
-		newNode.id = name
-		newNode.style.display="";
-//		newNode.style.width=mass*unit_size;
-//		newNode.style.height=mass*unit_size;
-		
-		sim.addBody(name,mass,mass*unit_size,pos,sim.universe.getOrbitalVelocity(pos,mass,1));
-	}
-
-	sim.paint();
-	
-	var frame_rate = 25;
-	var subdivisions = 100
-	var speedup = 2;
-	
-	var interval = 1/frame_rate;
-	setInterval(function (){iterate(interval*speedup,subdivisions)},interval*1000);
-}
-
-function iterate(time,subdivisions) {
-	for (var i = 0; i < subdivisions; i++) {
-		sim.iterate(time/subdivisions);
-	}
-	sim.paint();
-}
-
-function move (id, rows, cols, width,height) {
-		var el = document.getElementById(id);
-		if (typeof width === "undefined") {
-			width  = el.clientWidth;
-		} else {
-			el.style.width = width + "px";
-		}
-		if (typeof height === "undefined") {
-			var height = el.clientHeight;
-		} else {
-			el.style.height = height + "px";
-		}
-		el.style.top =  (rows - height/2) + "px";
-		el.style.left  = (cols - width/2 ) + "px";
-}
-			
 		</script>
 		<link rel="stylesheet" href="monthrob.css" />
 		<link rel="stylesheet" href="sunshine.css" />
@@ -181,8 +63,8 @@ function move (id, rows, cols, width,height) {
 	<body>
 		<div id="stage">
 			<div id="sunshine_container" class="shine_base shine_container">
-				<div class="shine_base">
-					<div class="shine_base">
+				<div class="shine_base shine_mask_2">
+					<div class="shine_base shine_mask_1">
 						<div class="shine_base shine_gradient"></div>
 					</div>
 				</div>
@@ -206,8 +88,17 @@ function move (id, rows, cols, width,height) {
 			var num_colors = colors.length;
 			color_num = Math.floor(Math.random() * num_colors);
 			document.body.style.backgroundColor = colors[color_num];
-			setup();
-			
+			simulation = new Simulation(
+				document.getElementById("monverse"),
+				document.getElementById("minimon")
+			);
+			simulation.addSun(10000,0.5);
+			simulation.addRandomBodies(5,
+						0.5,2,
+						1,10,
+						0.02);
+						
+						
 			// This positions sunshine divs right behind 'mainmon'
 			// Have to use a timeout because Chrome initially reports wrong position
 			function move_sun() {
@@ -229,5 +120,18 @@ function move (id, rows, cols, width,height) {
 			ga('create', 'UA-59768168-1', 'auto');
 			ga('send', 'pageview');
 		</script>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-59768168-1', 'auto');
+			ga('send', 'pageview');
+
+
+
+		
+		</script>
+
 	</body>
 </html>
