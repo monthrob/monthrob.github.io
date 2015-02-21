@@ -37,9 +37,6 @@ Simulation.prototype = {
 		new Gravity.Vector (0,0));		
 	},
 	addRandomBodies : function (n_planets,min_r,max_r,min_mass,max_mass,unit_size) {
-//		var monverse_el = document.getElementById("monverse");
-//		var n_planets = 5;
-
 		// Random orbiting planets
 		for (var i =0; i < n_planets; i++) {
 			var mass = min_mass + (Math.random() * (max_mass - min_mass) );
