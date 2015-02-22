@@ -13,8 +13,8 @@ Simulation = function (universe_el,template_el) {
 	this.universe_el = universe_el;
 	this.elements =[];
 	this.universe = new Gravity.Universe();
-	this.bottom = new Gravity.Vector(-2,-2,0);
-	this.top    = new Gravity.Vector(2,2,0);
+	this.bottom = new Gravity.Vector(-2,-2,-2);
+	this.top    = new Gravity.Vector(2,2,2);
 
 	this.universe_el = universe_el;
 	this.template_el = template_el;
@@ -43,14 +43,15 @@ Simulation.prototype = {
 			// Use polar coordinates
 			// 1. Choose a random radius
 			// 2. Chose  a random ange from 0 360 = 2*pi in radians
-			var pos = new Gravity.Vector(min_r + Math.random()*(max_r - min_r),0,0)
-							.rotate(Math.random()*2*Math.PI,"Z");
+			var the_r = min_r + Math.random()*(max_r - min_r)
+			var pos = new Gravity.Vector(0,the_r,0).rotate(Math.random()*2*Math.PI,"X");
 			var newNode =this.template_el.cloneNode();
 			this.universe_el.appendChild(newNode);
 			var name =  "minimon1"+i
 			newNode.id = name
 			newNode.style.display="";
-			this.addBody(name,mass, mass*unit_size, pos,this.universe.getOrbitalVelocity(pos,mass,1));
+			var orb_vel = this.universe.getOrbitalVelocity(pos,mass,0);
+			this.addBody(name,mass, mass*unit_size, pos,orb_vel);
 		}
 		this.paint();
 },
@@ -77,9 +78,9 @@ Simulation.prototype = {
 		} else if (width > height) {
 			x_scale = width / height;
 		}
-		var scale_vec = new Gravity.Vector(x_scale,y_scale,0);
+		var scale_vec = new Gravity.Vector(x_scale,y_scale,1);
 		coors  = this.sun.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
-		this.move("mainmon",coors.rows, coors.cols,coors.width, coors.height);
+		this.move("mainmon",coors.rows, coors.cols,coors.width, coors.height,coors.z_index);
 
 		move_sun();
 
@@ -87,10 +88,10 @@ Simulation.prototype = {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
 			var coors = body.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
-			this.move(id,coors.rows, coors.cols,coors.width,coors.height);
+			this.move(id,coors.rows, coors.cols,coors.width,coors.height,coors.z_index);
 		}
 	},
-	move: function (id, rows, cols,width,height) {
+	move: function (id, rows, cols,width,height,z_index) {
 		var el = document.getElementById(id);
 		if (typeof width === "undefined") {
 			width  = el.clientWidth;
@@ -105,6 +106,8 @@ Simulation.prototype = {
 
 		el.style.top =  (rows - height/2) + "px";
 		el.style.left  = (cols - width/2 ) + "px";
+		el.style.zIndex  = z_index;
+
 	}
 
 }

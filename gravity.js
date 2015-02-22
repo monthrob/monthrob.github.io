@@ -26,7 +26,7 @@ Gravity.Universe = function () {
 	this.do_elastic = false;
 	this.max_r = 5;
 	this.elastic_factor  = 1;
-	this.do_retard = true;
+	this.do_retard = false;
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
 	this.do_all_gravity  = false;
@@ -92,7 +92,7 @@ Gravity.Universe.prototype = {
 		}
 
 		var speed = Math.sqrt(this.gravity_constant * (this.centre_mass + m)/r);
-		return pos.rotate(angle,'Z').direction().scale(speed);
+		return pos.rotate(angle,'X').direction().scale(speed);
 	}
 
 
@@ -131,13 +131,28 @@ Gravity.Body.prototype = {
 	viewportCoord: function (top,left, height, width, bottom_vector, top_vector) {
 		var factor_x = width  / (top_vector.x - bottom_vector.x);
 		var factor_y = height / (top_vector.y - bottom_vector.y);
+
+		var z = this.position.z;
+
+		var z_max = top_vector.z;
+		var z_min = bottom_vector.z;
+		var z_range = z_max - z_min;
+		var z_unit  = 2;
+		var z_scale = 2;
+
+		var z_factor = 0;
+
+		if (z > z_min && z < z_max) {
+			var z_factor = z_scale * (z - z_min) / (z_max - z_min)
+		}
 		var cols = left + ((this.position.x - bottom_vector.x) / (top_vector.x - bottom_vector.x) * width);
 		// rows are the other way round
 		var rows    = top + ((top_vector.y - this.position.y ) / (top_vector.y - bottom_vector.y) * height);
-		var el_height = this.radius * factor_y*2;
-		var el_width  = this.radius * factor_x*2;
 
-		return {rows: rows,cols:cols, height: el_height , width: el_width}
+		var el_height = this.radius * factor_y*2* z_factor;
+		var el_width  = this.radius * factor_x*2*z_factor;
+
+		return {rows: rows,cols:cols, height: el_height , width: el_width, z_index: Math.round(z * 100)}
 
 	},
 	// Moves the body on per frame
