@@ -1,12 +1,12 @@
 
-//  Gravity module 
+//  Gravity module
 // (c) Monish Biswas 2015
-//  
+//
 //  Classes
 //
 //  Universe - Holds all objects in the universe
 //  Body     - Holds a body with mass, position and velocity
- 
+
 
 //  This is the module definition
 var Gravity = {};
@@ -57,25 +57,25 @@ Gravity.Universe.prototype = {
 					var relative_pos = other.position.minus(body.position);
 					var r = relative_pos.modulus();
 					var other_mass  = other.mass;
-					
+
 					var factor = body_mass * other_mass * this.gravity_constant
 					var force = relative_pos.direction().scale(factor/(r*r));
-		
+
 					body.addForce(force);
 				}
 			}
-			
-			
+
+
 			//  Also add a elastic force to bring it back
 			if (this.do_elastic && r > this.max_r) {
 				var elastic_force = body.position.scale(-1).scale(this.elastic_factor);
 				body.addForce(elastic_force);
 			}
-			// Also retard it if is it too fast 
+			// Also retard it if is it too fast
 			var speed = body.velocity.modulus()
 			if (this.do_retard &&  r > this.max_r) {
 					//  Work out the component in the direction from the origin
-					//  and pull in that direction 
+					//  and pull in that direction
 				var outward_vel = body.velocity.dot(body.position)
 				var slowdown_force = body.position.direction().scale(-this.slowdown_factor);
 				body.addForce(slowdown_force);
@@ -90,20 +90,20 @@ Gravity.Universe.prototype = {
 		if (!up) {
 			angle=-angle;
 		}
-		
+
 		var speed = Math.sqrt(this.gravity_constant * (this.centre_mass + m)/r);
-		return pos.rotate(angle).direction().scale(speed);
+		return pos.rotate(angle,'Z').direction().scale(speed);
 	}
 
-	
-	
-	
+
+
+
 }
 
 
 
 
-//  Body class 
+//  Body class
 
 Gravity.Body = function(mass,radius,position,velocity,universe) {
 	this.mass     = mass;
@@ -115,7 +115,7 @@ Gravity.Body = function(mass,radius,position,velocity,universe) {
 }
 
 Gravity.Body.prototype = {
-	//  Adds a force vector in 
+	//  Adds a force vector in
 	//  Newton
 	addForce: function (force_vector) {
 		this.forces.push(force_vector);
@@ -123,37 +123,37 @@ Gravity.Body.prototype = {
 	toString: function () {
 		return "pos: "+ this.position + ", vel: " + this.velocity;
 	},
-	// Get Position in coordinates, given 
-	// 
+	// Get Position in coordinates, given
+	//
 	// viewport top ,left, bottom ,right values
 	// Positions of top left, bottom right in universe
 	// Converts up--down direction
 	viewportCoord: function (top,left, height, width, bottom_vector, top_vector) {
-		var factor_x = width  / (top_vector.x - bottom_vector.x); 
+		var factor_x = width  / (top_vector.x - bottom_vector.x);
 		var factor_y = height / (top_vector.y - bottom_vector.y);
 		var cols = left + ((this.position.x - bottom_vector.x) / (top_vector.x - bottom_vector.x) * width);
 		// rows are the other way round
 		var rows    = top + ((top_vector.y - this.position.y ) / (top_vector.y - bottom_vector.y) * height);
 		var el_height = this.radius * factor_y*2;
 		var el_width  = this.radius * factor_x*2;
-		
+
 		return {rows: rows,cols:cols, height: el_height , width: el_width}
-	
+
 	},
 	// Moves the body on per frame
 	newFrame: function (time) {
 		//  Work out the new velocity
-		var accel = new Gravity.Vector (0,0)
+		var accel = new Gravity.Vector (0,0,0)
 
 		for (var i in this.forces) {
-			var force = this.forces[i];			
+			var force = this.forces[i];
 			//  Add in the acceleration
 			accel = accel.add(force.scale(1/(this.mass)));
 		}
 		this.forces = [];
-		// Equation of motion = 
+		// Equation of motion =
 		// r = ro + vt + 0.5*a*t^2
-		// New Position - from Velocity 
+		// New Position - from Velocity
 		this.position = this.position.add(this.velocity.scale(time));
 		// Now consider acceleration 0.5 * a * t^2
 		this.position = this.position.add(accel.scale(0.5).scale(time*time));
@@ -166,50 +166,72 @@ Gravity.Body.prototype = {
 
 //  Vector Class
 
-Gravity.Vector = function(the_x,the_y) {
+Gravity.Vector = function(the_x,the_y,the_z) {
 	this.x = the_x;
 	this.y = the_y;
-	
+	this.z = the_z;
+
 }
 
 
 Gravity.Vector.prototype = {
 	"add": function (a) {
-		return new Gravity.Vector(this.x + a.x,this.y + a.y);
+		return new Gravity.Vector(this.x + a.x,this.y + a.y,this.z + a.z);
 	},
 	"minus": function (a) {
-		return new Gravity.Vector(this.x - a.x,this.y - a.y);
+		return new Gravity.Vector(this.x - a.x,this.y - a.y,this.z - a.z);
 	},
 	"dot": function (v) {
-		return this.x*v.x + this.y*v.y;
+		return this.x*v.x + this.y*v.y + this.z*v.z;
 	},
 	"scale": function (a) {
-		return new Gravity.Vector (this.x*a, this.y*a);
+		return new Gravity.Vector (this.x*a, this.y*a, this.z*a);
 	},
 	"scalev": function (v) {
-		return new Gravity.Vector (this.x*v.x, this.y*v.y);
+		return new Gravity.Vector (this.x*v.x, this.y*v.y, this.z*v.z);
 	},
 
 	//  Returns modulus of vector
 	modulus: function () {
-		return Math.sqrt(this.x*this.x + this.y*this.y); 
+		return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
 	},
 	//  Returns a vector of length 1 in the same direction
 	direction: function () {
 		return this.scale(1/this.modulus());
 	},
-	rotate: function (angle) {
+	rotate: function (angle,axis) {
 		var sin = Math.sin(angle);
 		var cos = Math.cos(angle);
 		var x=this.x;
 		var y=this.y;
-
-		return new Gravity.Vector(
-			x*cos - y*sin,
-			x*sin + y*cos
-		);
-	},	
+		var z=this.z;
+		var ret;
+		switch (axis) {
+			case "X":
+				ret = new Gravity.Vector(
+					x,
+					y*cos - z*sin,
+					y*sin + z*cos
+				);
+				break;
+			case "Y":
+				ret = new Gravity.Vector(
+					x*cos + z*sin,
+					y,
+					-x*sin + z*cos
+				);
+				break;
+			case "Z":
+				ret = new Gravity.Vector(
+					x*cos - y*sin,
+					x*sin + y*cos,
+					z
+				);
+				break;
+		}
+		return ret;
+	},
 	toString: function() {
-		return '(' + this.x + ',' + this.y + ')';
+		return '(' + this.x + ',' + this.y + ',' + this.z + ')';
 	}
 }
