@@ -26,6 +26,9 @@ Simulation = function (universe_el,template_el) {
 	this.interval = 1 / this.frame_rate;
 	var myself = this;
 	this.interval_id   = setInterval(function(){myself.iterate()},this.interval*1000);
+
+	this.last_model_time = null;
+	this.last_paint_time = null;
 }
 
 Simulation.prototype = {
@@ -60,10 +63,15 @@ Simulation.prototype = {
 		this.universe.addBody(id,mass,radius,pos,vel);
 	},
 	iterate: function() {
+		var time = performance.now() ;
 		for (var i = 0; i < this.subdivisions; i++) {
 			this.universe.iterate(this.interval*this.speedup/this.subdivisions);
 		}
+		var model_time = performance.now() - time;
 		this.paint();
+		var paint_time = performance.now() - time - model_time;
+		this.last_model_time = model_time;
+		this.last_paint_time = paint_time;
 	},
 	paint: function () {
 		var height = this.universe_el.clientHeight;
