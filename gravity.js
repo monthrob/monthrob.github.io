@@ -92,7 +92,7 @@ Gravity.Universe.prototype = {
 		}
 
 		var speed = Math.sqrt(this.gravity_constant * (this.centre_mass + m)/r);
-		return pos.rotate(angle,'X').direction().scale(speed);
+		return pos.rotate(angle,'Z').direction().scale(speed);
 	}
 
 
@@ -128,32 +128,42 @@ Gravity.Body.prototype = {
 	// viewport top ,left, bottom ,right values
 	// Positions of top left, bottom right in universe
 	// Converts up--down direction
-	viewportCoord: function (top,left, height, width, bottom_vector, top_vector) {
+	viewportCoord: function (top,left, height, width, view_distance, bottom_vector, top_vector) {
 		var factor_x = width  / (top_vector.x - bottom_vector.x);
 		var factor_y = height / (top_vector.y - bottom_vector.y);
 
 		var z = this.position.z;
 
-		var z_max = top_vector.z;
-		var z_min = bottom_vector.z;
-		var z_range = z_max - z_min;
-		var z_unit  = 2;
-		var z_scale = 2;
+		// Assume origin is normal viewport
 
-		var z_factor = 0;
+		var z_far  = top_vector.z;
+		var z_near = bottom_vector.z;
 
-		if (z > z_min && z < z_max) {
-			var z_factor = z_scale * (z - z_min) / (z_max - z_min)
+		var cols;
+		var rows;
+		var el_height;
+		var el_width;
+
+		if (z > z_near) {
+			var z_factor = (0 - z_near + view_distance) / (z - z_near + view_distance);
+			//  x, take into account radius
+			var radius = this.radius;
+
+			var x = (this.position.x )*z_factor;
+			var y = (this.position.y )*z_factor;
+
+			var cols = left + ((x - bottom_vector.x) / (top_vector.x - bottom_vector.x) * width);
+			// rows are the other way round
+			var rows    = top + ((top_vector.y - y) / (top_vector.y - bottom_vector.y) * height);
+
+			var el_height = this.radius * z_factor * factor_y*2 ;
+			var el_width  = this.radius * z_factor * factor_x*2 ;
+
+			//  Note HTML z-index is opposite to the model z index
+			return {displayed: true, rows: rows,cols:cols, height: el_height , width: el_width, z_index: -Math.round(z * 100)}
+		} else {
+			return {displayed: false}
 		}
-		var cols = left + ((this.position.x - bottom_vector.x) / (top_vector.x - bottom_vector.x) * width);
-		// rows are the other way round
-		var rows    = top + ((top_vector.y - this.position.y ) / (top_vector.y - bottom_vector.y) * height);
-
-		var el_height = this.radius * factor_y*2* z_factor;
-		var el_width  = this.radius * factor_x*2*z_factor;
-
-		return {rows: rows,cols:cols, height: el_height , width: el_width, z_index: Math.round(z * 100)}
-
 	},
 	// Moves the body on per frame
 	newFrame: function (time) {

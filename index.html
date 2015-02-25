@@ -26,11 +26,11 @@
 			});
 			$(document).keyup(function(e) {
 				//alert(e.which);
-				input += e.which;    
-				    
+				input += e.which;
+
 				clearTimeout(timer);
 				timer = setTimeout(function() { input = ""; }, 200);
-				    
+
 				check_input();
 			});
 
@@ -97,8 +97,8 @@
 						0.5,2,
 						1,10,
 						0.02);
-						
-						
+
+
 			// This positions sunshine divs right behind 'mainmon'
 			// Have to use a timeout because Chrome initially reports wrong position
 			function move_sun() {
@@ -107,8 +107,8 @@
 				var main_position   = mainmon.position();
 				main_position.top  -= (sunshine.height() - mainmon.height())  / 2.0;
 				main_position.left -= (sunshine.width()  - mainmon.width())   / 2.0;
-				sunshine.css(main_position);	
-				
+				sunshine.css(main_position);
+
 			}
 			$('#sunshine_container').fadeIn(1500);
 		</script>
@@ -130,7 +130,7 @@
 
 
 
-		
+
 		</script>
 
 	</body>

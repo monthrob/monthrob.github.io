@@ -29,6 +29,8 @@ Simulation = function (universe_el,template_el) {
 
 	this.last_model_time = null;
 	this.last_paint_time = null;
+
+	this.view_distance = 5;
 }
 
 Simulation.prototype = {
@@ -47,7 +49,7 @@ Simulation.prototype = {
 			// 1. Choose a random radius
 			// 2. Chose  a random ange from 0 360 = 2*pi in radians
 			var the_r = min_r + Math.random()*(max_r - min_r)
-			var pos = new Gravity.Vector(0,the_r,0).rotate(Math.random()*2*Math.PI,"X");
+			var pos = new Gravity.Vector(the_r,0,0).rotate(Math.random()*2*Math.PI,"Z");
 			var newNode =this.template_el.cloneNode();
 			this.universe_el.appendChild(newNode);
 			var name =  "minimon1"+i
@@ -87,7 +89,7 @@ Simulation.prototype = {
 			x_scale = width / height;
 		}
 		var scale_vec = new Gravity.Vector(x_scale,y_scale,1);
-		coors  = this.sun.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
+		coors  = this.sun.viewportCoord(0,0,height,width, this.view_distance, this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
 		this.move("mainmon",coors.rows, coors.cols,coors.width, coors.height,coors.z_index);
 
 		move_sun();
@@ -95,7 +97,7 @@ Simulation.prototype = {
 		for (i in this.elements) {
 			var id    = this.elements[i];
 			var body  = this.universe.bodies[id];
-			var coors = body.viewportCoord(0,0,height,width,this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
+			var coors = body.viewportCoord(0,0,height,width,this.view_distance, this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
 			this.move(id,coors.rows, coors.cols,coors.width,coors.height,coors.z_index);
 		}
 	},
