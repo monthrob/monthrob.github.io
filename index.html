@@ -1,12 +1,14 @@
 <DOCTYPE html>
-<html>
+<html ng-app='Simulation'>
 	<head>
 		<title>Monthrob appreciation page</title>
 		<!-- Monflake effect -->
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 		<script type="text/javascript" src="gravity.js"></script>
 		<script type="text/javascript" src="simulation.js"></script>
 		<script type="text/javascript" src="snow.js"></script>
+		<script type="text/javascript" src="Controllers/Simulation.js"></script>
 		<script type="text/javascript">
 			var input = "";
 			var timer;
@@ -81,6 +83,9 @@
 			</div>
 		</div>
 		<div id="footer">
+			<div ng-controller='SimulationController'>
+			<input type="checkbox" ng-model="simulation.universe.do_all_gravity">Full Gravity Interactions</input>
+			</div>
 			<div id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
 		</div>
 		<script type="text/javascript">
@@ -88,16 +93,6 @@
 			var num_colors = colors.length;
 			color_num = Math.floor(Math.random() * num_colors);
 			document.body.style.backgroundColor = colors[color_num];
-			simulation = new Simulation(
-				document.getElementById("monverse"),
-				document.getElementById("minimon")
-			);
-			simulation.addSun(10000,0.5);
-			simulation.addRandomBodies(5,
-						0.5,2,
-						1,10,
-						0.02);
-
 
 			// This positions sunshine divs right behind 'mainmon'
 			// Have to use a timeout because Chrome initially reports wrong position
