@@ -65,15 +65,16 @@ Simulation.prototype = {
 		this.universe.addBody(id,mass,radius,pos,vel);
 	},
 	iterate: function() {
-		var time = performance.now() ;
+//     Performance.now() nto supported on iOS
+//		var time = performance.now() ;
 		for (var i = 0; i < this.subdivisions; i++) {
 			this.universe.iterate(this.interval*this.speedup/this.subdivisions);
 		}
-		var model_time = performance.now() - time;
+//		var model_time = performance.now() - time;
 		this.paint();
-		var paint_time = performance.now() - time - model_time;
-		this.last_model_time = model_time;
-		this.last_paint_time = paint_time;
+//		var paint_time = performance.now() - time - model_time;
+//		this.last_model_time = model_time;
+//		this.last_paint_time = paint_time;
 	},
 	paint: function () {
 		var height = this.universe_el.clientHeight;
