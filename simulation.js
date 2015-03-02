@@ -30,7 +30,7 @@ Simulation = function (universe_el,template_el) {
 	this.last_model_time = null;
 	this.last_paint_time = null;
 
-	this.view_distance = 5;
+	this.view_distance = 0.5;
 }
 
 Simulation.prototype = {
@@ -49,13 +49,16 @@ Simulation.prototype = {
 			// 1. Choose a random radius
 			// 2. Chose  a random ange from 0 360 = 2*pi in radians
 			var the_r = min_r + Math.random()*(max_r - min_r)
-			var pos = new Gravity.Vector(the_r,0,0).rotate(Math.random()*2*Math.PI,"Z");
+			var angle_z = Math.random()*2*Math.PI;
+			var angle_x = Math.random()*2*Math.PI;
+			
+			var pos = new Gravity.Vector(the_r,0,0).rotate(angle_z,"Z").rotate(angle_x,'X');
 			var newNode =this.template_el.cloneNode();
 			this.universe_el.appendChild(newNode);
 			var name =  "minimon1"+i
 			newNode.id = name
 			newNode.style.display="";
-			var orb_vel = this.universe.getOrbitalVelocity(pos,mass,0);
+			var orb_vel = this.universe.getOrbitalVelocity(new Gravity.Vector(the_r,0,0),mass,0).rotate(angle_z,"Z").rotate(angle_x,'X');
 			this.addBody(name,mass, mass*unit_size, pos,orb_vel);
 		}
 		this.paint();
