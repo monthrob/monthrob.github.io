@@ -13,19 +13,6 @@
 			var input = "";
 			var timer;
 			var mode = false;
-			$(function() {
-				today = new Date();
-				var snowImage = "http://dl.dropboxusercontent.com/u/86028039/monthrob_x64.gif";
-				if (today.getDate() == 14 && today.getMonth() == 1) {
-					snowImage = "http://www.i2symbol.com/images/symbols/love/white_heart_suit_u2661_icon_64x64.png";
-				}
-				if (0) {
-				$(document).snow({
-					SnowImage: snowImage,
-					Quantity: 10
-				});
-				}
-			});
 			$(document).keyup(function(e) {
 				//alert(e.which);
 				input += e.which;
