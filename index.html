@@ -26,16 +26,16 @@
 			function check_input() {
 				if(input == "71") {
 					//display the search bar
-					el = document.getElementById("searchbar");
-					el.style.display = 'block';
-					el.style.visibility = 'visible';
+					elem = document.getElementById("searchbar");
+					elem.style.display = 'block';
+					elem.style.visibility = 'visible';
 					document.getElementById("googleInput").focus();
 				}
 				if (input == "72736869") {
 					//display the search bar
-					el = document.getElementById("searchbar");
-					el.style.display = 'none';
-					el.style.visibility = 'hidden';
+					elem = document.getElementById("searchbar");
+					elem.style.display = 'none';
+					elem.style.visibility = 'hidden';
 					gi = document.getElementById("googleInput");
 					if (gi.value != '') {
 						gi.value = '';
@@ -49,8 +49,8 @@
 		<link rel="stylesheet" href="css/sunshine.css" />
 		<!-- End of Monflake -->
 	</head>
-	<body>
-		<div id="stage">
+	<body ng-controller='SimulationController'>
+    <div id="stage">
 			<div id="sunshine_container" class="shine_base shine_container">
 				<div class="shine_base shine_mask_2">
 					<div class="shine_base shine_mask_1">
@@ -58,13 +58,15 @@
 					</div>
 				</div>
 			</div>
+
 			<div id="monverse" class="monverse">
-				<img id="mainmon" class="mainmon" src="images/MonGlobeWhite.gif" alt="monthrob"></img>
-				<img id="minimon"  class="minimon" style="display:none" src="images/MonGlobeWhite.gif" alt="minithrob"></img>
+				{{simulation.mainmon.cols}}
+                <mini-mon ng-repeat="el in simulation.elements" coords="el"></mini-mon>
+                <mini-mon coords="simulation.mainmon"></mini-mon>
 			</div>
 		</div>
 		<div id="footer">
-			<div ng-controller='SimulationController'>
+			<div>
 			<input type="checkbox" ng-model="simulation.universe.do_all_gravity">Full Gravity Interactions</input>
 			</div>
 			<div id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
@@ -74,19 +76,6 @@
 			var num_colors = colors.length;
 			color_num = Math.floor(Math.random() * num_colors);
 			document.body.style.backgroundColor = colors[color_num];
-
-			// This positions sunshine divs right behind 'mainmon'
-			// Have to use a timeout because Chrome initially reports wrong position
-			function move_sun() {
-				var mainmon  = $('#mainmon');
-				var sunshine = $('#sunshine_container');
-				var main_position   = mainmon.position();
-				main_position.top  -= (sunshine.height() - mainmon.height())  / 2.0;
-				main_position.left -= (sunshine.width()  - mainmon.width())   / 2.0;
-				sunshine.css(main_position);
-
-			}
-			$('#sunshine_container').fadeIn(1500);
 		</script>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -103,10 +92,6 @@
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 			ga('create', 'UA-59768168-1', 'auto');
 			ga('send', 'pageview');
-
-
-
-
 		</script>
 
 	</body>
