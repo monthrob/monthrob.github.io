@@ -58,7 +58,7 @@ Simulation = function (universe_el) {
 	//  Used for calculating frame rate
 	this.calc_frame_time_n = 0;
 	this.calc_frame_time_sum = 0;
-	this.calc_last_frame_rate_time = performance.now()
+	this.calc_last_frame_rate_time = Date.now()
 	this.calc_frame_rate = null;
 
 	this.interval = 1 / this.frame_rate;
@@ -136,9 +136,9 @@ Simulation.prototype = {
 		paint_time = this.now() - time - model_time;
 		this.calc_frame_time_sum += paint_time;
 		this.calc_frame_time_n ++;
-		if (this.now() - this.calc_last_frame_rate_time > 1e3) {
+		if (Date.now() - this.calc_last_frame_rate_time > 1e3) {
 			this.calc_frame_rate = this.calc_frame_time_n * 1e3/this.calc_frame_time_sum
-			this.calc_last_frame_rate_time = this.now()
+			this.calc_last_frame_rate_time = Date.now()
 		}
 
 	},
