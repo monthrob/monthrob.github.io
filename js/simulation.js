@@ -3,7 +3,6 @@
 // (c) Monish Biswas 2015
 
 
-
 //
 //  Classes
 //
@@ -70,6 +69,33 @@ Simulation = function (universe_el) {
 	this.view_distance = 0.5;
 }
 
+Simulation.prototype.now = (function() {
+
+	// Returns the number of milliseconds elapsed since either the browser navigationStart event or
+	// the UNIX epoch, depending on availability.
+	// Where the browser supports 'performance' we use that as it is more accurate (microsoeconds
+	// will be returned in the fractional part) and more reliable as it does not rely on the system time.
+	// Where 'performance' is not available, we will fall back to Date().getTime().
+
+	// jsFiddle: http://jsfiddle.net/davidwaterston/xCXvJ
+
+
+	var performance = window.performance || {};
+
+	performance.now = (function() {
+		return performance.now    ||
+			performance.webkitNow     ||
+			performance.msNow         ||
+			performance.oNow          ||
+			performance.mozNow        ||
+			function() { return new Date().getTime(); };
+	})();
+
+	return performance.now();
+
+});
+
+
 Simulation.prototype = {
 	addSun: function (mass, radius) {
 		this.sun = new Gravity.Body (
@@ -100,19 +126,19 @@ Simulation.prototype = {
 		this.universe.addBody(id,mass,radius,pos,vel);
 	},
 	iterate: function() {
-		var time = performance.now();
+		var time = this.now();
 
 		for (var i = 0; i < this.subdivisions; i++) {
 			this.universe.iterate(this.interval*this.speedup/this.subdivisions);
 		}
-		var model_time = performance.now() - time;
+		var model_time = this.now() - time;
 		this.paint();
-		paint_time = performance.now() - time - model_time;
+		paint_time = this.now() - time - model_time;
 		this.calc_frame_time_sum += paint_time;
 		this.calc_frame_time_n ++;
-		if (performance.now() - this.calc_last_frame_rate_time > 1e3) {
+		if (this.now() - this.calc_last_frame_rate_time > 1e3) {
 			this.calc_frame_rate = this.calc_frame_time_n * 1e3/this.calc_frame_time_sum
-			this.calc_last_frame_rate_time = performance.now()
+			this.calc_last_frame_rate_time = this.now()
 		}
 
 	},
