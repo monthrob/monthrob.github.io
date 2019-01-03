@@ -111,6 +111,12 @@
 		 height: 100%;
 	 }
 
+	div#frame_rate {
+		font-color: #0808ff;
+		font-size: larger;
+		font-weight: bold;
+	}
+
   	div#monverse {
  		position: relative;
 		width: 100%;

@@ -56,6 +56,12 @@ Simulation = function (universe_el) {
 	this.subdivisions = 100;
 	this.speedup = 2;
 
+	//  Used for calculating frame rate
+	this.calc_frame_time_n = 0;
+	this.calc_frame_time_sum = 0;
+	this.calc_last_frame_rate_time = performance.now()
+	this.calc_frame_rate = null;
+
 	this.interval = 1 / this.frame_rate;
 
 	this.last_model_time = null;
@@ -94,16 +100,21 @@ Simulation.prototype = {
 		this.universe.addBody(id,mass,radius,pos,vel);
 	},
 	iterate: function() {
-//     Performance.now() nto supported on iOS
-//		var time = performance.now() ;
+		var time = performance.now();
+
 		for (var i = 0; i < this.subdivisions; i++) {
 			this.universe.iterate(this.interval*this.speedup/this.subdivisions);
 		}
-//		var model_time = performance.now() - time;
+		var model_time = performance.now() - time;
 		this.paint();
-//		var paint_time = performance.now() - time - model_time;
-//		this.last_model_time = model_time;
-//		this.last_paint_time = paint_time;
+		paint_time = performance.now() - time - model_time;
+		this.calc_frame_time_sum += paint_time;
+		this.calc_frame_time_n ++;
+		if (performance.now() - this.calc_last_frame_rate_time > 1e3) {
+			this.calc_frame_rate = this.calc_frame_time_n * 1e3/this.calc_frame_time_sum
+			this.calc_last_frame_rate_time = performance.now()
+		}
+
 	},
 	paint: function () {
 		this.height = this.universe_el.clientHeight;

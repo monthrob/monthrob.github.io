@@ -50,7 +50,8 @@
 		<!-- End of Monflake -->
 	</head>
 	<body ng-controller='SimulationController'>
-    <div id="stage">
+		<div id="frame_rate">{{simulation.calc_frame_rate | number:0 }} FPS</div>
+		<div id="stage">
 			<div id="sunshine_container" class="shine_base shine_container">
 				<div class="shine_base shine_mask_2">
 					<div class="shine_base shine_mask_1">
