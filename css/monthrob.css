@@ -112,8 +112,8 @@
 	 }
 
 	div#frame_rate {
-		font-color: #0808ff;
-		font-size: larger;
+		color: #1f0bcc;
+		font-size: 42px;
 		font-weight: bold;
 	}
 
