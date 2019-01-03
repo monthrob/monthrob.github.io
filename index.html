@@ -10,6 +10,12 @@
 		<script type="text/javascript" src="js/snow.js"></script>
 		<script type="text/javascript" src="js/controllers/Simulation.js"></script>
 		<script type="text/javascript">
+
+			var reload_interval_secs = 300;
+			window.setInterval(function() {
+				window.location.reload()
+			}, reload_interval_secs * 1000);
+
 			var input = "";
 			var timer;
 			var mode = false;
