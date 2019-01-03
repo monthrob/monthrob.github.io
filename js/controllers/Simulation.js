@@ -52,7 +52,7 @@ app.directive('miniMon', function () {
                     'height': coords.height + "px",
                     'top': (coords.rows - coords.height/2) + "px",
                     'left': (coords.cols - coords.width/2 ) + "px",
-                    'z-index': coords.depth
+                    'z-index': coords.z_index
                 });
             });
         }
