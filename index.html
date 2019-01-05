@@ -37,8 +37,10 @@
 			</div>
 		</div>
 		<div id="footer">
-			<div>
-			<input type="checkbox" ng-model="simulation.universe.do_all_gravity">Full Gravity Interactions</input>
+			<label><input type="checkbox" ng-model="simulation.universe.do_all_gravity">Full Gravity Interactions</input></label>
+			<label><input type="checkbox" ng-model="simulation.universe.do_collisions">Collisions</input></label>
+			<label><input type="checkbox" ng-model="simulation.universe.do_retard">Limit speed</input></label>
+			<input type="text" ng-model="simulation.universe.bounce_threshold">Limit speed</input>
 			</div>
 			<div id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
 		</div>
