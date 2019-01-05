@@ -22,7 +22,7 @@
 	</head>
 	<body ng-controller='SimulationController'>
 		<div id="stage">
-			<div id="frame_rate">{{simulation.calc_frame_rate | number:0 }} FPS {{simulation.universe.n_collisions}}</div>
+			<div id="frame_rate">{{simulation.calc_frame_rate | number:0 }} FPS</div>
 			<div id="sunshine_container" class="shine_base shine_container">
 				<div class="shine_base shine_mask_2">
 					<div class="shine_base shine_mask_1">
@@ -40,7 +40,7 @@
 			<label><input type="checkbox" ng-model="simulation.universe.do_all_gravity">Full Gravity Interactions</input></label>
 			<label><input type="checkbox" ng-model="simulation.universe.do_collisions">Collisions</input></label>
 			<label><input type="checkbox" ng-model="simulation.universe.do_retard">Limit speed</input></label>
-			<input type="text" ng-model="simulation.universe.bounce_threshold">Limit speed</input>
+			<label>Young modulus<input type="text" ng-model="simulation.universe.bounce_threshold"></label>
 			</div>
 			<div id="animatedcopyright" style="display: block;" class="rubberBand animated"><h2 class="copyright">&copy; 2015 The Monish</h2></span>
 		</div>
