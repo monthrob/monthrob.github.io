@@ -15,49 +15,14 @@
 			window.setInterval(function() {
 				window.location.reload()
 			}, reload_interval_secs * 1000);
-
-			var input = "";
-			var timer;
-			var mode = false;
-			$(document).keyup(function(e) {
-				//alert(e.which);
-				input += e.which;
-
-				clearTimeout(timer);
-				timer = setTimeout(function() { input = ""; }, 200);
-
-				check_input();
-			});
-
-			function check_input() {
-				if(input == "71") {
-					//display the search bar
-					elem = document.getElementById("searchbar");
-					elem.style.display = 'block';
-					elem.style.visibility = 'visible';
-					document.getElementById("googleInput").focus();
-				}
-				if (input == "72736869") {
-					//display the search bar
-					elem = document.getElementById("searchbar");
-					elem.style.display = 'none';
-					elem.style.visibility = 'hidden';
-					gi = document.getElementById("googleInput");
-					if (gi.value != '') {
-						gi.value = '';
-					}
-					gi.blur();
-				}
-			}
-
 		</script>
 		<link rel="stylesheet" href="css/monthrob.css" />
 		<link rel="stylesheet" href="css/sunshine.css" />
 		<!-- End of Monflake -->
 	</head>
 	<body ng-controller='SimulationController'>
-		<div id="frame_rate">{{simulation.calc_frame_rate | number:0 }} FPS</div>
 		<div id="stage">
+			<div id="frame_rate">{{simulation.calc_frame_rate | number:0 }} FPS {{simulation.universe.n_collisions}}</div>
 			<div id="sunshine_container" class="shine_base shine_container">
 				<div class="shine_base shine_mask_2">
 					<div class="shine_base shine_mask_1">
