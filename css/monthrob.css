@@ -109,7 +109,32 @@
 		 margin: 1em auto;
 		 width: 100%;
 		 height: 100%;
-	 }
+	}
+
+	a#add_mon {
+		height: 30px;
+	}
+
+	a.button {
+		position: relative;
+		top: 0px;
+		margin: 0em;
+		padding: 0em;
+	}
+
+	a.button:hover {
+		border: black 1px solid;
+	}
+
+	a.button:active {
+		top: 3px;
+	}
+
+	a#add_mon img {
+		height: 20px;
+		margin: 0em;
+		padding: 0em;
+	}
 
 	div#frame_rate {
 		color: #1f0bcc;

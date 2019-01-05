@@ -52,6 +52,8 @@ Simulation = function (universe_el) {
 
 	this.height = null;
 	this.width = null;
+
+	this.n_bodies = 5;
 	//  Set up timeout
 	this.frame_rate = 25;
 	this.subdivisions = 100;
@@ -100,6 +102,16 @@ Simulation.prototype = {
 
 		},
 
+	setup: function () {
+        this.addSun(10000,0.5);
+        var n_existing = this.elements.length;
+        var n_new = this.n_bodies - n_existing
+        this.addRandomBodies(n_new,
+            0.5,2,
+            1,10,
+            0.02);
+
+    },
 	addSun: function (mass, radius) {
 		this.sun = new Gravity.Body (
 		"sun",
@@ -109,6 +121,7 @@ Simulation.prototype = {
 		new Gravity.Vector (0,0,0));
 	},
 	addRandomBodies : function (n_planets,min_r,max_r,min_mass,max_mass,unit_size) {
+		var base_i = this.elements.length
 		// Random orbiting planets
 		for (var i =0; i < n_planets; i++) {
 			var mass = min_mass + (Math.random() * (max_mass - min_mass) );
@@ -121,7 +134,7 @@ Simulation.prototype = {
 			
 			var pos = new Gravity.Vector(the_r,0,0).rotate(angle_z,"Z").rotate(angle_x,'X');
 			var orb_vel = this.universe.getOrbitalVelocity(new Gravity.Vector(the_r,0,0),mass,0).rotate(angle_z,"Z").rotate(angle_x,'X');
-			this.addBody(i, mass, mass*unit_size, pos,orb_vel);
+			this.addBody(base_i + i, mass, mass*unit_size, pos,orb_vel);
 		}
 		this.paint();
 },
@@ -130,6 +143,7 @@ Simulation.prototype = {
 		this.universe.addBody(id,mass,radius,pos,vel);
 	},
 	iterate: function() {
+		this.setup()
 		var time = this.now();
 
 		for (var i = 0; i < this.subdivisions; i++) {

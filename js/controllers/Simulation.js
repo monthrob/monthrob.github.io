@@ -15,14 +15,9 @@ app.controller('SimulationController',function  ($scope, $interval) {
 	$scope.simulation = new Simulation(
 		document.getElementById("monverse")
     );
-
-	$scope.simulation.addSun(10000,0.5);
-	$scope.simulation.addRandomBodies(5,
-		0.5,2,
-		1,10,
-		0.02);
-	$scope.height;
-	$scope.width;
+    $scope.simulation.setup()
+    $scope.height;
+    $scope.width;
 
     interval = 1 / $scope.simulation.frame_rate;
 
