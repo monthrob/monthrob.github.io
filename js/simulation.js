@@ -100,6 +100,7 @@ Simulation.prototype = {
 
 	addSun: function (mass, radius) {
 		this.sun = new Gravity.Body (
+		"sun",
 		mass,
 		radius,
 		new Gravity.Vector (0,0,0),

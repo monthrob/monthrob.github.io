@@ -22,7 +22,8 @@ Gravity.Universe = function () {
 	//  that animates well
 	this.gravity_constant = 1e-5;
 	//  This is in mass units, earth mass's
-	this.centre_mass = 10000
+	this.centre_mass = 10000;
+	this.centre_radius = 0.5;
 	this.do_elastic = false;
 	this.max_r = 5;
 	this.elastic_factor  = 1;
@@ -30,11 +31,16 @@ Gravity.Universe = function () {
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
 	this.do_all_gravity  = false;
+	this.do_collisions = false;
+	this.bounce_threshold = 100;
+	this.sun = new Gravity.Body("sun", this.centre_mass, this.centre_radius,
+		new Gravity.Vector(0,0,0), new Gravity.Vector(0,0,0))
+	this.n_collisions = 0;
 }
 
 Gravity.Universe.prototype = {
 	addBody: function (id,  mass, radius, pos, vel) {
-		this.bodies[id] = new Gravity.Body(mass, radius, pos, vel,this);
+		this.bodies[id] = new Gravity.Body("p_" + id, mass, radius, pos, vel,this);
 	},
 	iterate: function (time) {
 		//  Force relative to position from origin
@@ -47,6 +53,11 @@ Gravity.Universe.prototype = {
 			var r = body.position.modulus();
 			var force = body.position.scale(-1).direction().scale(factor/(r*r));
 			body.addForce(force);
+
+			if (this.do_collisions) {
+                this.collide(body, this.sun, this.bounce_threshold)
+            }
+
 			// Also consider the interactions with all the other bodies
 			if (this.do_all_gravity) {
 				for (j in this.bodies) {
@@ -62,6 +73,16 @@ Gravity.Universe.prototype = {
 					var force = relative_pos.direction().scale(factor/(r*r));
 
 					body.addForce(force);
+				}
+			}
+
+			if (this.do_collisions) {
+				for (j in this.bodies) {
+					if (i == j) {
+						continue;
+					}
+					var other = this.bodies[j];
+					this.collide(body, other, this.bounce_threshold);
 				}
 			}
 
@@ -83,6 +104,21 @@ Gravity.Universe.prototype = {
 			body.newFrame(time);
 		}
 	},
+	//  Check for collision and handle of body with other
+	collide: function(body, other, compression_modulus) {
+		var relative_pos = body.position.minus(other.position);
+		var r = relative_pos.modulus();
+		var r_t = body.radius;
+		var r_o = other.radius;
+		var overlap = r - r_t - r_o;
+		if (overlap < 0) {
+			var bounce_force = -compression_modulus* overlap
+			//  give a shove in the opposite direction
+			var force = relative_pos.direction().scale(bounce_force);
+			body.addForce(force);
+			this.n_collisions ++;
+		}
+    },
 	getOrbitalVelocity: function (pos,m,up) {
 		var r = pos.modulus();
 		var angle = Math.PI/2;
@@ -105,12 +141,12 @@ Gravity.Universe.prototype = {
 
 //  Body class
 
-Gravity.Body = function(mass,radius,position,velocity,universe) {
+Gravity.Body = function(label, mass,radius,position,velocity) {
+	this.label    = label;
 	this.mass     = mass;
 	this.radius   = radius;
 	this.position = position;
 	this.velocity = velocity;
-	this.universe = universe;
 	this.forces = [];
 }
 
@@ -160,9 +196,9 @@ Gravity.Body.prototype = {
 			var el_width  = this.radius * z_factor * factor_x*2 ;
 
 			//  Note HTML z-index is opposite to the model z index
-			return {displayed: true, rows: rows,cols:cols, height: el_height , width: el_width, z_index: -Math.round(z * 100)}
+			return {label: this.label ,displayed: true, rows: rows,cols:cols, height: el_height , width: el_width, z_index: -Math.round(z * 100)}
 		} else {
-			return {displayed: false}
+			return {label: this.label, displayed: false}
 		}
 	},
 	// Moves the body on per frame
