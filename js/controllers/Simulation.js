@@ -46,7 +46,13 @@ app.directive('miniMon', function () {
 
                 var coords = scope.coords;
 
-                elem.id = coords.id
+                elem.id = coords.id;
+                if (coords.displayed) {
+                    elem.show()
+                } else {
+                    elem.hide()
+                }
+                elem.attr('title','ff');
                 elem.css({
                     'width': coords.width + "px",
                     'height': coords.height + "px",

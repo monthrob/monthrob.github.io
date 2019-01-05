@@ -8,6 +8,7 @@
 //
 SimEl = function(id) {
     this.id = id;
+    this.displayed = false;
 	this.rows = null;
 	this.cols = null;
 	this.width = null;
@@ -16,8 +17,9 @@ SimEl = function(id) {
 }
 
 SimEl.prototype = {
-    move: function (rows, cols, width, height, z_index) {
+    move: function (displayed, rows, cols, width, height, z_index) {
     	that = new SimEl(this.id);
+    	that.displayed = displayed
         that.rows = rows
         that.cols = cols
         that.width = width
@@ -158,13 +160,13 @@ Simulation.prototype = {
 		}
 		var scale_vec = new Gravity.Vector(x_scale,y_scale,1);
 		coors  = this.sun.viewportCoord(0,0,this.height, this.width, this.view_distance, this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
-		this.mainmon = this.mainmon.move(coors.rows, coors.cols,coors.width, coors.height,coors.z_index);
+		this.mainmon = this.mainmon.move(true, coors.rows, coors.cols,coors.width, coors.height,coors.z_index);
 		for (i in this.universe.bodies) {
 
             body = this.universe.bodies[i];
             var coors = body.viewportCoord(0, 0, this.height, this.width, this.view_distance, this.bottom.scalev(scale_vec), this.top.scalev(scale_vec));
             var el = this.elements[i];
-			this.elements[i] = el.move(coors.rows, coors.cols,coors.width,coors.height,coors.z_index);
+			this.elements[i] = el.move(coors.displayed, coors.rows, coors.cols,coors.width,coors.height,coors.z_index);
 		}
 	},
 }
