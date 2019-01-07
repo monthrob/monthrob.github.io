@@ -53,7 +53,7 @@ Simulation = function (universe_el) {
 	this.height = null;
 	this.width = null;
 
-	this.n_bodies = 5;
+	this.n_bodies = 10;
 	//  Set up timeout
 	this.frame_rate = 25;
 	this.subdivisions = 100;

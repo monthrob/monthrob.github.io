@@ -27,11 +27,11 @@ Gravity.Universe = function () {
 	this.do_elastic = false;
 	this.max_r = 5;
 	this.elastic_factor  = 1;
-	this.do_retard = false;
+	this.do_retard = true;
 	this.max_speed   = 0.1;
 	this.slowdown_factor = 1;
-	this.do_all_gravity  = false;
-	this.do_collisions = false;
+	this.do_all_gravity  = true;
+	this.do_collisions = true;
 	this.bounce_threshold = 100;
 	this.sun = new Gravity.Body("sun", this.centre_mass, this.centre_radius,
 		new Gravity.Vector(0,0,0), new Gravity.Vector(0,0,0))
