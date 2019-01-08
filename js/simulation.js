@@ -85,8 +85,6 @@ Simulation.prototype = {
 			// Where 'performance' is not available, we will fall back to Date().getTime().
 
 			// jsFiddle: http://jsfiddle.net/davidwaterston/xCXvJ
-
-
 			var performance = window.performance || {};
 
 			performance.now = (function() {
@@ -97,9 +95,7 @@ Simulation.prototype = {
 					performance.mozNow        ||
 					function() { return new Date().getTime(); };
 			})();
-
 			return performance.now();
-
 		},
 
 	setup: function () {
@@ -184,17 +180,3 @@ Simulation.prototype = {
 		}
 	},
 }
-
-/*
-// This positions sunshine divs right behind 'mainmon'
-// Have to use a timeout because Chrome initially reports wrong position
-function move_sun() {
-    var mainmon  = $('#mainmon');
-    var sunshine = $('#sunshine_container');
-    var main_position   = mainmon.position();
-    main_position.top  -= (sunshine.height() - mainmon.height())  / 2.0;
-    main_position.left -= (sunshine.width()  - mainmon.width())   / 2.0;
-    sunshine.css(main_position);
-
-}
-*/
