@@ -140,7 +140,9 @@ Simulation.prototype = {
 		this.paint();
     },
     add: function () {
-		this.n_bodies +=1;
+		if (this.n_bodies < 99) {
+            this.n_bodies += 1;
+        }
     },
     remove: function () {
 		if (this.n_bodies > 1) {
