@@ -138,7 +138,15 @@ Simulation.prototype = {
 			this.addBody(base_i + i, mass, mass*unit_size, pos,orb_vel);
 		}
 		this.paint();
-},
+    },
+    add: function () {
+		this.n_bodies +=1;
+    },
+    remove: function () {
+		if (this.n_bodies > 1) {
+		    this.n_bodies -=1;
+        }
+    },
 	addBody: function (id,  mass, radius, pos, vel) {
 		this.elements.push(new SimEl(id));
 		this.universe.addBody(id,mass,radius,pos,vel);
