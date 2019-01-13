@@ -102,11 +102,16 @@ Simulation.prototype = {
         this.addSun(10000,0.5);
         var n_existing = this.elements.length;
         var n_new = this.n_bodies - n_existing
-        this.addRandomBodies(n_new,
-            0.5,2,
-            1,10,
-            0.02);
-
+        if (n_new < 0) {
+            for (var i = 0; i < -n_new; i++) {
+                this.removeBody(n_existing - i - 1);
+            }
+        } else {
+            this.addRandomBodies(n_new,
+                0.5, 2,
+                1, 10,
+                0.02);
+        }
     },
 	addSun: function (mass, radius) {
 		this.sun = new Gravity.Body (
@@ -137,6 +142,14 @@ Simulation.prototype = {
 	addBody: function (id,  mass, radius, pos, vel) {
 		this.elements.push(new SimEl(id));
 		this.universe.addBody(id,mass,radius,pos,vel);
+	},
+	removeAllBodies : function () {
+		this.elements.splice(0,this.elements.length);
+		this.universe.removeAllBodies()
+	},
+	removeBody: function (id) {
+		this.elements.splice(id);
+		this.universe.removeBody(id);
 	},
 	iterate: function() {
 		this.setup()

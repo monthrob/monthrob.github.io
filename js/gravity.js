@@ -42,7 +42,14 @@ Gravity.Universe.prototype = {
 	addBody: function (id,  mass, radius, pos, vel) {
 		this.bodies[id] = new Gravity.Body("p_" + id, mass, radius, pos, vel,this);
 	},
-	iterate: function (time) {
+	removeAllBodies: function () {
+		delete this.bodies;
+		this.bodies = {}
+	},
+	removeBody: function (id) {
+		delete this.bodies[id];
+	},
+    iterate: function (time) {
 		//  Force relative to position from origin
 		for (var i in this.bodies) {
 			var body = this.bodies[i];

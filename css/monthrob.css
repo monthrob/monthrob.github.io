@@ -111,26 +111,11 @@
 		 height: 100%;
 	}
 
-	a#add_mon {
-		height: 30px;
+	div#footer button {
+		font-weight: bold;
 	}
 
-	a.button {
-		position: relative;
-		top: 0px;
-		margin: 0em;
-		padding: 0em;
-	}
-
-	a.button:hover {
-		border: black 1px solid;
-	}
-
-	a.button:active {
-		top: 3px;
-	}
-
-	a#add_mon img {
+	img.footer {
 		height: 20px;
 		margin: 0em;
 		padding: 0em;
