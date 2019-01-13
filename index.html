@@ -37,10 +37,11 @@
 			</div>
 		</div>
 		<div id="footer">
-			<img class="footer" src="images/MonGlobeWhite.gif">{{simulation.n_bodies}}
-				<button id="clear_all" ng-click="simulation.removeAllBodies()">Reset</button>
-				<button id="add_mon" ng-click="simulation.add()">+</button>
-				<button id="remove_mon" ng-click="simulation.remove()">-</button>
+			<img class="footer" src="images/MonGlobeWhite.gif">
+			<div id="mon_count">{{simulation.n_bodies}}</div>
+			<button id="clear_all" ng-click="simulation.removeAllBodies()">Reset</button>
+			<button id="add_mon" ng-click="simulation.add()">+</button>
+			<button id="remove_mon" ng-click="simulation.remove()">-</button>
 			<label><input type="checkbox" ng-model="simulation.universe.do_all_gravity">Full Gravity Interactions</input></label>
 			<label><input type="checkbox" ng-model="simulation.universe.do_collisions">Collisions</input></label>
 			<label><input type="checkbox" ng-model="simulation.universe.do_retard">Limit speed</input></label>

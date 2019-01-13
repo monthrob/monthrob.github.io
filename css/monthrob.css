@@ -115,7 +115,15 @@
 		font-weight: bold;
 	}
 
+	div#footer div#mon_count {
+		display: inline-block;
+		font-weight: bold;
+		width: 1.5em;
+		text-align: left;
+	}
+
 	img.footer {
+		vertical-align: baseline;
 		height: 20px;
 		margin: 0em;
 		padding: 0em;
