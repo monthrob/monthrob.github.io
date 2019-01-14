@@ -34,7 +34,7 @@ Gravity.Universe = function () {
 	this.do_collisions = true;
 	this.bounce_threshold = 100;
 	this.sun = new Gravity.Body("sun", this.centre_mass, this.centre_radius,
-		new Gravity.Vector(0,0,0), new Gravity.Vector(0,0,0))
+		new Vector(0,0,0), new Vector(0,0,0))
 	this.n_collisions = 0;
 }
 
@@ -211,7 +211,7 @@ Gravity.Body.prototype = {
 	// Moves the body on per frame
 	newFrame: function (time) {
 		//  Work out the new velocity
-		var accel = new Gravity.Vector (0,0,0)
+		var accel = new Vector (0,0,0)
 
 		for (var i in this.forces) {
 			var force = this.forces[i];
@@ -231,75 +231,3 @@ Gravity.Body.prototype = {
 }
 
 
-
-//  Vector Class
-
-Gravity.Vector = function(the_x,the_y,the_z) {
-	this.x = the_x;
-	this.y = the_y;
-	this.z = the_z;
-
-}
-
-
-Gravity.Vector.prototype = {
-	"add": function (a) {
-		return new Gravity.Vector(this.x + a.x,this.y + a.y,this.z + a.z);
-	},
-	"minus": function (a) {
-		return new Gravity.Vector(this.x - a.x,this.y - a.y,this.z - a.z);
-	},
-	"dot": function (v) {
-		return this.x*v.x + this.y*v.y + this.z*v.z;
-	},
-	"scale": function (a) {
-		return new Gravity.Vector (this.x*a, this.y*a, this.z*a);
-	},
-	"scalev": function (v) {
-		return new Gravity.Vector (this.x*v.x, this.y*v.y, this.z*v.z);
-	},
-
-	//  Returns modulus of vector
-	modulus: function () {
-		return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
-	},
-	//  Returns a vector of length 1 in the same direction
-	direction: function () {
-		return this.scale(1/this.modulus());
-	},
-	rotate: function (angle,axis) {
-		var sin = Math.sin(angle);
-		var cos = Math.cos(angle);
-		var x=this.x;
-		var y=this.y;
-		var z=this.z;
-		var ret;
-		switch (axis) {
-			case "X":
-				ret = new Gravity.Vector(
-					x,
-					y*cos - z*sin,
-					y*sin + z*cos
-				);
-				break;
-			case "Y":
-				ret = new Gravity.Vector(
-					x*cos + z*sin,
-					y,
-					-x*sin + z*cos
-				);
-				break;
-			case "Z":
-				ret = new Gravity.Vector(
-					x*cos - y*sin,
-					x*sin + y*cos,
-					z
-				);
-				break;
-		}
-		return ret;
-	},
-	toString: function() {
-		return '(' + this.x + ',' + this.y + ',' + this.z + ')';
-	}
-}

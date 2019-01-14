@@ -47,8 +47,8 @@ Simulation = function (universe_el) {
     this.mainmon = new SimEl('mainmon');
     this.elements =[];
 	this.universe = new Gravity.Universe();
-	this.bottom = new Gravity.Vector(-2,-2,-2);
-	this.top    = new Gravity.Vector(2,2,2);
+	this.bottom = new Vector(-2,-2,-2);
+	this.top    = new Vector(2,2,2);
 
 	this.height = null;
 	this.width = null;
@@ -118,8 +118,8 @@ Simulation.prototype = {
 		"sun",
 		mass,
 		radius,
-		new Gravity.Vector (0,0,0),
-		new Gravity.Vector (0,0,0));
+		new Vector (0,0,0),
+		new Vector (0,0,0));
 	},
 	addRandomBodies : function (n_planets,min_r,max_r,min_mass,max_mass,unit_size) {
 		var base_i = this.elements.length
@@ -133,8 +133,8 @@ Simulation.prototype = {
 			var angle_z = Math.random()*2*Math.PI;
 			var angle_x = Math.random()*2*Math.PI;
 			
-			var pos = new Gravity.Vector(the_r,0,0).rotate(angle_z,"Z").rotate(angle_x,'X');
-			var orb_vel = this.universe.getOrbitalVelocity(new Gravity.Vector(the_r,0,0),mass,0).rotate(angle_z,"Z").rotate(angle_x,'X');
+			var pos = new Vector(the_r,0,0).rotate(angle_z,"Z").rotate(angle_x,'X');
+			var orb_vel = this.universe.getOrbitalVelocity(new Vector(the_r,0,0),mass,0).rotate(angle_z,"Z").rotate(angle_x,'X');
 			this.addBody(base_i + i, mass, mass*unit_size, pos,orb_vel);
 		}
 		this.paint();
@@ -191,7 +191,7 @@ Simulation.prototype = {
 		} else if (this.width > this.height) {
 			x_scale = this.width / this.height;
 		}
-		var scale_vec = new Gravity.Vector(x_scale,y_scale,1);
+		var scale_vec = new Vector(x_scale,y_scale,1);
 		coors  = this.sun.viewportCoord(0,0,this.height, this.width, this.view_distance, this.bottom.scalev(scale_vec),this.top.scalev(scale_vec));
 		this.mainmon = this.mainmon.move(true, coors.rows, coors.cols,coors.width, coors.height,coors.z_index);
 		for (i in this.universe.bodies) {
